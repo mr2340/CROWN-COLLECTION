@@ -1,0 +1,44 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "18k Gold Diamond Crown Ring",
+      "description": "Our signature crown-inspired ring crafted in 18k yellow gold and embedded with premium VS1 clarity diamonds.",
+      "price": 320000,
+      "category": "Rings",
+      "image": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "2",
+      "title": "Blush Rose Gold Pendant",
+      "description": "An elegant, delicate heart-shaped pendant in blush pink gold, hanging from a shimmering 16-inch chain.",
+      "price": 150000,
+      "category": "Necklaces",
+      "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "3",
+      "title": "Empress Diamond Link Bracelet",
+      "description": "A bold statement piece featuring interlocking links adorned with micro-pavé diamonds. Secure push-button clasp.",
+      "price": 450000,
+      "category": "Bracelets",
+      "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "4",
+      "title": "Royal Gold Hoop Earrings",
+      "description": "Classic textured hoop earrings in 22k gold. Light, comfortable, and perfect for both day and evening wear.",
+      "price": 195000,
+      "category": "Earrings",
+      "image": "https://images.unsplash.com/photo-1635767790038-365803e8dbd3?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "5",
+      "title": "Monarch Luxury Jewelry Set",
+      "description": "A complete imperial jewelry collection containing our matching Crown Necklace and Empress Stud Earrings.",
+      "price": 850000,
+      "category": "Sets",
+      "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80"
+    }
+  ]
+}

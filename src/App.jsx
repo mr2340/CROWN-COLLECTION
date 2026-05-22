@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   ShoppingBag, Sun, Moon, Plus, Minus, Trash2, Search, 
   Upload, X, ChevronRight, Lock, ShieldCheck, ShoppingCart, 
-  Sparkles, CheckCircle2, AlertCircle, ArrowLeft, Loader2
+  Sparkles, CheckCircle2, AlertCircle, ArrowLeft, Loader2,
+  Award, Truck, Star, ChevronDown, ChevronUp,
+  Home, Mail, Eye, Ruler, Instagram
 } from 'lucide-react';
 
 // Price Formatter Helper
@@ -19,12 +21,41 @@ const formatPrice = (price) => {
 // COMPONENT: NAVBAR
 // ==========================================
 function Navbar({ cartCount, onCartOpen, darkMode, toggleDarkMode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleScrollTo = (e, targetId) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150);
+    } else {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="container navbar-container">
         <Link to="/" className="nav-logo">
           ✨ CROWN <span>COLLECTION</span>
         </Link>
+        
+        {/* Desktop Navigation Links */}
+        <div className="nav-links">
+          <a href="#shop" onClick={(e) => handleScrollTo(e, 'shop')} className="nav-link-item">Shop</a>
+          <a href="#heritage" onClick={(e) => handleScrollTo(e, 'heritage')} className="nav-link-item">Heritage</a>
+          <a href="#reviews" onClick={(e) => handleScrollTo(e, 'reviews')} className="nav-link-item">Reviews</a>
+          <a href="#faq" onClick={(e) => handleScrollTo(e, 'faq')} className="nav-link-item">FAQ</a>
+        </div>
         
         <div className="nav-actions">
           <button 
@@ -164,13 +195,513 @@ function CartDrawer({ isOpen, onClose, cart, updateQuantity, removeFromCart }) {
   );
 }
 
+
+// ==========================================
+// COMPONENT: MOBILE BOTTOM NAVIGATION
+// ==========================================
+function MobileBottomNav({ onCartOpen, cartCount, onSearchFocus }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const handleNav = (targetId) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (targetId === 'shop' && onSearchFocus) {
+          onSearchFocus();
+        }
+      }, 150);
+    } else {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      if (targetId === 'shop' && onSearchFocus) {
+        onSearchFocus();
+      }
+    }
+  };
+
+  return (
+    <div className="mobile-bottom-nav">
+      <button onClick={() => handleNav('hero')} className="mobile-nav-item" aria-label="Home">
+        <Home size={20} />
+        <span>Home</span>
+      </button>
+      <button onClick={() => handleNav('shop')} className="mobile-nav-item" aria-label="Shop">
+        <Search size={20} />
+        <span>Shop</span>
+      </button>
+      <button onClick={onCartOpen} className="mobile-nav-item cart-btn-mobile" aria-label="Open Cart">
+        <div style={{ position: 'relative' }}>
+          <ShoppingBag size={20} />
+          {cartCount > 0 && <span className="mobile-cart-badge">{cartCount}</span>}
+        </div>
+        <span>Cart</span>
+      </button>
+      <button onClick={() => navigate('/admin')} className={`mobile-nav-item ${location.pathname === '/admin' ? 'active' : ''}`} aria-label="Admin Access">
+        <Lock size={20} />
+        <span>Admin</span>
+      </button>
+    </div>
+  );
+}
+
+// ==========================================
+// COMPONENT: RING SIZING MODAL
+// ==========================================
+function SizingModal({ isOpen, onClose }) {
+  if (!isOpen) return null;
+  return (
+    <div className="quickview-overlay" onClick={onClose} style={{ zIndex: 1100 }}>
+      <div className="quickview-modal sizing-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
+        <button className="quickview-close" onClick={onClose} aria-label="Close modal">
+          <X size={20} />
+        </button>
+        <div style={{ padding: '30px' }}>
+          <h2 className="section-title" style={{ fontSize: '28px', marginBottom: '16px', textAlign: 'left' }}>
+            📏 Jewelry Sizing Guide
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', fontSize: '15px' }}>
+            Ensure your jewelry fits like royalty. Follow these steps to measure your perfect ring size at home.
+          </p>
+          
+          <div className="sizing-steps" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="step-item" style={{ borderLeft: '3px solid var(--primary-pink)', paddingLeft: '16px' }}>
+              <strong style={{ display: 'block', marginBottom: '4px' }}>Step 1: Wrap</strong>
+              <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Wrap a thin strip of paper or string around the base of your finger. Ensure it isn't too tight.</span>
+            </div>
+            <div className="step-item" style={{ borderLeft: '3px solid var(--primary-pink)', paddingLeft: '16px' }}>
+              <strong style={{ display: 'block', marginBottom: '4px' }}>Step 2: Mark</strong>
+              <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Use a pen to mark the exact point where the paper overlaps to form a complete circle.</span>
+            </div>
+            <div className="step-item" style={{ borderLeft: '3px solid var(--primary-pink)', paddingLeft: '16px' }}>
+              <strong style={{ display: 'block', marginBottom: '4px' }}>Step 3: Measure & Match</strong>
+              <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Lay the paper flat and measure the distance in millimeters (circumference). Match it against the table below:</span>
+            </div>
+          </div>
+          
+          <table className="sizing-table" style={{ width: '100%', marginTop: '24px', borderCollapse: 'collapse', fontSize: '14px' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left' }}>
+                <th style={{ padding: '8px' }}>Inside Circ. (mm)</th>
+                <th style={{ padding: '8px' }}>US Size</th>
+                <th style={{ padding: '8px' }}>UK Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <td style={{ padding: '8px' }}>51.9 mm</td>
+                <td style={{ padding: '8px' }}>6</td>
+                <td style={{ padding: '8px' }}>L ½</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <td style={{ padding: '8px' }}>54.4 mm</td>
+                <td style={{ padding: '8px' }}>7</td>
+                <td style={{ padding: '8px' }}>N ½</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <td style={{ padding: '8px' }}>57.0 mm</td>
+                <td style={{ padding: '8px' }}>8</td>
+                <td style={{ padding: '8px' }}>P ½</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <td style={{ padding: '8px' }}>59.5 mm</td>
+                <td style={{ padding: '8px' }}>9</td>
+                <td style={{ padding: '8px' }}>R ½</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <td style={{ padding: '8px' }}>62.1 mm</td>
+                <td style={{ padding: '8px' }}>10</td>
+                <td style={{ padding: '8px' }}>T ½</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
+            <button 
+              onClick={() => {
+                const message = `Hello Crown Collection ⚡\n\nI need help measuring my ring size. Can you send me a digital size print template?`;
+                window.open(`https://wa.me/2348029402971?text=${encodeURIComponent(message)}`, '_blank');
+              }}
+              className="cta-button" 
+              style={{ fontSize: '13px', padding: '10px 20px', backgroundColor: 'var(--gold-accent)' }}
+            >
+              Get Sizing Help on WhatsApp
+            </button>
+            <button onClick={onClose} className="cta-button" style={{ fontSize: '13px', padding: '10px 20px', backgroundColor: 'var(--text-primary)' }}>
+              Close Guide
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// COMPONENT: PRODUCT QUICK VIEW MODAL
+// ==========================================
+function QuickViewModal({ product, isOpen, onClose, addToCart, onSizingOpen }) {
+  const [activeTab, setActiveTab] = useState('specs'); // 'specs', 'shipping', 'care'
+  const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    if (isOpen) {
+      setQuantity(1);
+    }
+  }, [isOpen]);
+
+  if (!isOpen || !product) return null;
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
+    onClose();
+  };
+
+  const handleDirectWhatsApp = () => {
+    const itemTotal = formatPrice(product.price * quantity);
+    const message = `Hello Crown Collection ⚡\n\nI want to order this item immediately:\n- ${quantity}x ${product.title} (${itemTotal})\n\nCan you please check availability? Thank you!`;
+    const whatsappUrl = `https://wa.me/2348029402971?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleSizingInquiry = () => {
+    onSizingOpen();
+  };
+
+  return (
+    <div className="quickview-overlay" onClick={onClose}>
+      <div className="quickview-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="quickview-close" onClick={onClose} aria-label="Close modal">
+          <X size={20} />
+        </button>
+        
+        <div className="quickview-grid">
+          <div className="quickview-image-sec">
+            <img src={product.image || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&auto=format&fit=crop&q=80'} alt={product.title} className="quickview-img" />
+          </div>
+          
+          <div className="quickview-info-sec">
+            <span className="quickview-category">{product.category}</span>
+            <h2 className="quickview-title">{product.title}</h2>
+            <div className="quickview-price-row">
+              <span className="quickview-price">{formatPrice(product.price)}</span>
+            </div>
+            
+            <p className="quickview-desc">{product.description || 'No description available for this handcrafted jewelry piece.'}</p>
+            
+            {/* Spec Tabs */}
+            <div className="quickview-tabs">
+              <button onClick={() => setActiveTab('specs')} className={`tab-btn ${activeTab === 'specs' ? 'active' : ''}`}>Specifications</button>
+              <button onClick={() => setActiveTab('shipping')} className={`tab-btn ${activeTab === 'shipping' ? 'active' : ''}`}>Shipping</button>
+              <button onClick={() => setActiveTab('care')} className={`tab-btn ${activeTab === 'care' ? 'active' : ''}`}>Jewelry Care</button>
+            </div>
+            
+            <div className="quickview-tab-content">
+              {activeTab === 'specs' && (
+                <ul className="specs-table">
+                  <li>
+                    <span>Metal Finish:</span>
+                    <strong>{product.category === 'Rings' ? '18k Solid Yellow/Rose Gold Alloy' : 'Premium 18k Gold Plated / Solid Silver'}</strong>
+                  </li>
+                  <li>
+                    <span>Gemstone:</span>
+                    <strong>{product.title.toLowerCase().includes('diamond') ? 'VVS Clarity simulated diamond stones' : 'Pristine cut simulated sapphire/emerald'}</strong>
+                  </li>
+                  <li>
+                    <span>Weight:</span>
+                    <strong>{product.category === 'Rings' ? 'approx. 8.5g - 12.0g' : 'approx. 14g - 28g'}</strong>
+                  </li>
+                  <li>
+                    <span>Origin:</span>
+                    <strong>Handcrafted & hand-polished in Lagos, Nigeria</strong>
+                  </li>
+                </ul>
+              )}
+              
+              {activeTab === 'shipping' && (
+                <div className="tab-details">
+                  <p>🚚 <strong>Lagos Delivery:</strong> Secure delivery in 24 to 48 hours.</p>
+                  <p>✈️ <strong>Nationwide Delivery:</strong> Insured delivery in 3 to 5 business days via reliable courier service.</p>
+                  <p>🔁 <strong>Return Policy:</strong> Returns accepted within 7 days for exchange only (standard items only, custom orders are final sale).</p>
+                </div>
+              )}
+              
+              {activeTab === 'care' && (
+                <div className="tab-details">
+                  <p>Keep your Crown Collection pieces shining for generations:</p>
+                  <ul>
+                    <li>Avoid direct contact with perfumes, chlorine, and hair sprays.</li>
+                    <li>Clean gently with a soft micro-fiber cloth after wearing.</li>
+                    <li>Store in the velvet luxury box provided with your purchase.</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Sizing inquiry helper link */}
+            <button onClick={handleSizingInquiry} className="text-link-btn" style={{ margin: '12px 0 20px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Ruler size={14} /> Need help choosing your size? Sizing Guide & Ring Chart
+            </button>
+
+            {/* Actions Row */}
+            <div className="quickview-actions">
+              <div className="quantity-controller-large">
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="qty-large-btn" aria-label="Decrease quantity">
+                  <Minus size={16} />
+                </button>
+                <span className="qty-large-value">{quantity}</span>
+                <button onClick={() => setQuantity(quantity + 1)} className="qty-large-btn" aria-label="Increase quantity">
+                  <Plus size={16} />
+                </button>
+              </div>
+              
+              <button onClick={handleAddToCart} className="add-to-cart-large">
+                Add to Cart
+              </button>
+            </div>
+            
+            <button onClick={handleDirectWhatsApp} className="buy-now-whatsapp">
+              Buy Now via WhatsApp (Skip Cart)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// COMPONENT: SIGNATURE COLLECTIONS SHOWCASE
+// ==========================================
+function SignatureCollections({ onSelectCategory }) {
+  const collections = [
+    {
+      id: 1,
+      title: "Monarch Rings",
+      subtitle: "18k Gold & Gemstone Bands",
+      category: "Rings",
+      image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&auto=format&fit=crop&q=80"
+    },
+    {
+      id: 2,
+      title: "Imperial Necklaces",
+      subtitle: "Bespoke Pendants & Chains",
+      category: "Necklaces",
+      image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=80"
+    },
+    {
+      id: 3,
+      title: "Royal Jewelry Sets",
+      subtitle: "Matched Sets for Major Occasions",
+      category: "Sets",
+      image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&auto=format&fit=crop&q=80"
+    }
+  ];
+
+  return (
+    <section className="signature-collections-section container">
+      <div className="section-header">
+        <h2 className="section-title">The Signature Series</h2>
+        <p className="section-subtitle">Explore our hand-matched premium collections, curated for exquisite tastes and special milestones.</p>
+      </div>
+      
+      <div className="sig-grid">
+        {collections.map(col => (
+          <div key={col.id} className="sig-card" onClick={() => onSelectCategory(col.category)}>
+            <img src={col.image} alt={col.title} className="sig-card-img" />
+            <div className="sig-card-overlay">
+              <span className="sig-card-subtitle">{col.subtitle}</span>
+              <h3 className="sig-card-title">{col.title}</h3>
+              <span className="sig-explore-btn">
+                Shop Collection <ChevronRight size={14} />
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ==========================================
+// COMPONENT: CLIENT STYLE SHOWCASE GALLERY
+// ==========================================
+function StyleGallery() {
+  const [activeImage, setActiveImage] = useState(null);
+  
+  const galleryItems = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&auto=format&fit=crop&q=80",
+      caption: "Gold Herringbone Necklace & Monarch Ring Set"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=80",
+      caption: "Bespoke 18k Yellow Gold Diamond Wedding Band"
+    },
+    {
+      id: 3,
+      image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=600&auto=format&fit=crop&q=80",
+      caption: "Lagos Collection Imperial Gold Bangles"
+    },
+    {
+      id: 4,
+      image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600&auto=format&fit=crop&q=80",
+      caption: "Royal Blossom Diamond Chandelier Earrings"
+    }
+  ];
+
+  return (
+    <section className="gallery-section container">
+      <div className="section-header">
+        <h2 className="section-title">Royal Showcases</h2>
+        <p className="section-subtitle">Browse how our clients style Crown Collection pieces for major occasions and everyday luxury.</p>
+      </div>
+      <div className="gallery-grid">
+        {galleryItems.map(item => (
+          <div key={item.id} className="gallery-item-wrapper" onClick={() => setActiveImage(item)}>
+            <img src={item.image} alt={item.caption} className="gallery-img" />
+            <div className="gallery-overlay-hover">
+              <Eye size={24} className="gallery-eye-icon" />
+              <span>Zoom Styling View</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {activeImage && (
+        <div className="lightbox-overlay" onClick={() => setActiveImage(null)}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button className="lightbox-close" onClick={() => setActiveImage(null)} aria-label="Close image zoom">
+              <X size={24} />
+            </button>
+            <img src={activeImage.image} alt={activeImage.caption} className="lightbox-img" />
+            <p className="lightbox-caption">{activeImage.caption}</p>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+// ==========================================
+// COMPONENT: VIP NEWSLETTER CLUB
+// ==========================================
+function RoyaltyVIPClub({ onSubscribeSuccess }) {
+  const [email, setEmail] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) {
+      setError('Please provide a valid email address.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please provide a valid email address.');
+      return;
+    }
+    setError('');
+    setSubscribing(true);
+
+    setTimeout(() => {
+      setSubscribing(false);
+      setEmail('');
+      onSubscribeSuccess('Welcome to Royalty! We have sent a private invitation to your inbox.');
+      
+      import('canvas-confetti').then((confetti) => {
+        confetti.default({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.8 },
+          colors: ['#d4af37', '#d97d99', '#ffffff']
+        });
+      });
+    }, 1000);
+  };
+
+  return (
+    <section className="vip-newsletter-section">
+      <div className="container">
+        <div className="vip-newsletter-card">
+          <div className="vip-newsletter-icon">
+            <Mail size={32} />
+          </div>
+          <h2 className="vip-newsletter-title">Join The Royalty VIP Club</h2>
+          <p className="vip-newsletter-desc">
+            Subscribe to receive private invitations to seasonal sales, custom-sizing guides, and exclusive releases of solid gold jewelry in Nigeria.
+          </p>
+          
+          <form onSubmit={handleSubscribe} className="vip-form">
+            <div className="vip-input-group">
+              <input 
+                type="email" 
+                placeholder="Enter your email address" 
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError('');
+                }}
+                className={`vip-input ${error ? 'error' : ''}`}
+                required
+              />
+              <button type="submit" className="vip-btn" disabled={subscribing}>
+                {subscribing ? <Loader2 className="animate-spin" size={18} /> : 'Request Invitation'}
+              </button>
+            </div>
+            {error && <span className="vip-error-text">{error}</span>}
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ==========================================
+// COMPONENT: TOAST NOTIFICATION
+// ==========================================
+function Toast({ message, visible, onClose }) {
+  useEffect(() => {
+    if (visible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [visible, onClose]);
+
+  if (!visible) return null;
+
+  return (
+    <div className="luxury-toast">
+      <Sparkles size={18} className="toast-icon animate-pulse" />
+      <span className="toast-message">{message}</span>
+      <button onClick={onClose} className="toast-close-btn" aria-label="Close toast">
+        <X size={14} />
+      </button>
+    </div>
+  );
+}
+
 // ==========================================
 // VIEW: LANDING STORE FRONT
 // ==========================================
-function StoreFront({ products, loading, addToCart }) {
+function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen, onSubscribeSuccess }) {
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('featured');
+  const [activeFaq, setActiveFaq] = useState(null);
 
   const categories = ['All', 'Rings', 'Necklaces', 'Bracelets', 'Earrings', 'Sets'];
 
@@ -178,7 +709,7 @@ function StoreFront({ products, loading, addToCart }) {
   const filteredProducts = products
     .filter(p => category === 'All' || p.category === category)
     .filter(p => p.title.toLowerCase().includes(search.toLowerCase()) || 
-                 p.description.toLowerCase().includes(search.toLowerCase()))
+                 (p.description && p.description.toLowerCase().includes(search.toLowerCase())))
     .sort((a, b) => {
       if (sort === 'price-low') return a.price - b.price;
       if (sort === 'price-high') return b.price - a.price;
@@ -189,7 +720,7 @@ function StoreFront({ products, loading, addToCart }) {
   return (
     <div>
       {/* Hero Section */}
-      <section className="hero">
+      <section id="hero" className="hero">
         <div className="container hero-grid">
           <div>
             <span className="hero-subtitle">Premium Jewelry Collection</span>
@@ -197,7 +728,11 @@ function StoreFront({ products, loading, addToCart }) {
             <p className="hero-description">
               Discover timeless crown jewels, bespoke diamond rings, and premium accessories tailored for those who demand nothing less than royalty.
             </p>
-            <a href="#shop" className="cta-button">
+            <a href="#shop" className="cta-button" onClick={(e) => {
+              e.preventDefault();
+              const element = document.getElementById('shop');
+              if (element) element.scrollIntoView({ behavior: 'smooth' });
+            }}>
               Explore Collection
               <Sparkles size={18} />
             </a>
@@ -214,7 +749,41 @@ function StoreFront({ products, loading, addToCart }) {
         </div>
       </section>
 
-      {/* Shop Section */}
+      {/* Features Bar */}
+      <section className="features-bar">
+        <div className="container features-grid">
+          <div className="feature-item">
+            <Truck size={24} className="feature-icon" />
+            <div>
+              <h3>Secure Nationwide Delivery</h3>
+              <p>Fully insured courier shipping across Nigeria</p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <Award size={24} className="feature-icon" />
+            <div>
+              <h3>100% Certified Gold</h3>
+              <p>Sourced ethically and verified for absolute purity</p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <ShieldCheck size={24} className="feature-icon" />
+            <div>
+              <h3>Secure WhatsApp Checkout</h3>
+              <p>Direct confirmations with our customer support</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Signature Collections Showcase */}
+      <SignatureCollections onSelectCategory={(cat) => {
+        setCategory(cat);
+        const element = document.getElementById('shop');
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }} />
+
+      {/* Shop Catalog Section */}
       <section id="shop" className="shop-section container">
         <div className="section-header">
           <h2 className="section-title">The Royal Catalog</h2>
@@ -232,12 +801,20 @@ function StoreFront({ products, loading, addToCart }) {
                 {cat}
               </button>
             ))}
+            <button 
+              onClick={onSizingOpen}
+              className="category-btn sizing-helper-btn"
+              style={{ color: 'var(--gold-accent)', borderColor: 'rgba(212, 175, 55, 0.4)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Ruler size={14} /> Size Guide
+            </button>
           </div>
 
           <div className="search-sort-row">
             <div className="search-input-wrapper">
               <Search size={18} className="search-icon" />
               <input 
+                id="shop-search-input"
                 type="text" 
                 placeholder="Search premium pieces..." 
                 value={search}
@@ -276,10 +853,14 @@ function StoreFront({ products, loading, addToCart }) {
         ) : (
           <div className="products-grid">
             {filteredProducts.map(product => (
-              <article key={product.id} className="product-card">
+              <article key={product.id} className="product-card" onClick={() => onProductClick(product)} style={{ cursor: 'pointer' }}>
                 <div className="product-image-wrapper">
                   <span className="product-badge">New</span>
                   <img src={product.image || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&auto=format&fit=crop&q=80'} alt={product.title} className="product-image" loading="lazy" />
+                  <div className="product-card-quickview-overlay">
+                    <Eye size={18} />
+                    <span>Quick View</span>
+                  </div>
                 </div>
                 <div className="product-info">
                   <span className="product-category">{product.category}</span>
@@ -288,7 +869,10 @@ function StoreFront({ products, loading, addToCart }) {
                   <div className="product-footer">
                     <span className="product-price">{formatPrice(product.price)}</span>
                     <button 
-                      onClick={() => addToCart(product)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
                       className="add-to-cart-btn" 
                       title="Add to cart"
                     >
@@ -300,6 +884,137 @@ function StoreFront({ products, loading, addToCart }) {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Craftsmanship Section */}
+      <section id="heritage" className="craftsmanship-section">
+        <div className="container craftsmanship-grid">
+          <div className="craftsmanship-content">
+            <span className="hero-subtitle">Our Heritage</span>
+            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '20px' }}>Royal Craftsmanship & Nigerian Majesty</h2>
+            <p className="craftsmanship-p">
+              From our flagship workshop in Lagos, Crown Collection has redefined jewelry as an expression of majesty and heritage. Every piece is meticulously hand-refined, combining traditional Nigerian aesthetics with global standards of luxury.
+            </p>
+            <p className="craftsmanship-p">
+              We partner with experienced local smiths and international refiners to craft solid 18k and 22k gold jewelry, ensuring that each pendant, wedding band, and custom accessory possesses a weight, shine, and durability that lasts for generations.
+            </p>
+            <div className="specs-list">
+              <div className="spec-item">
+                <strong>22k & 18k Gold Finish</strong>
+                <span>Solid gold alloys tailored for color retention and gorgeous skin glow.</span>
+              </div>
+              <div className="spec-item">
+                <strong>VVS Clarity Gems</strong>
+                <span>Pristine diamond cuts that refract light from all angles.</span>
+              </div>
+            </div>
+          </div>
+          <div className="craftsmanship-image-wrapper">
+            <div className="craftsmanship-image-badge">✨ Handcrafted</div>
+            <img 
+              src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&auto=format&fit=crop&q=80" 
+              alt="Jeweler crafting premium rings" 
+              className="craftsmanship-img"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Client Style Gallery Section */}
+      <StyleGallery />
+
+      {/* Testimonials Section */}
+      <section id="reviews" className="testimonials-section">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Royal Reviews</h2>
+            <p className="section-subtitle">What our distinguished clients say about our service and craftsmanship.</p>
+          </div>
+          <div className="testimonials-grid">
+            <div className="testimonial-card">
+              <div className="stars-row">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={16} fill="var(--gold-accent)" color="var(--gold-accent)" />
+                ))}
+              </div>
+              <p className="testimonial-quote">"The 18k Diamond Crown Ring is absolutely breathtaking! It fits perfectly and the diamonds sparkle brilliantly. The WhatsApp checkout was incredibly fast, and it was delivered securely in Lagos within 48 hours."</p>
+              <div className="testimonial-author">
+                <strong>Chioma A.</strong>
+                <span>Lagos, Nigeria</span>
+              </div>
+            </div>
+
+            <div className="testimonial-card">
+              <div className="stars-row">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={16} fill="var(--gold-accent)" color="var(--gold-accent)" />
+                ))}
+              </div>
+              <p className="testimonial-quote">"Excellent service. I ordered a custom Monarch Jewelry Set for my wedding anniversary. The owner was extremely professional on WhatsApp and kept me updated throughout the process. Highly recommend!"</p>
+              <div className="testimonial-author">
+                <strong>Tunde O.</strong>
+                <span>Abuja, Nigeria</span>
+              </div>
+            </div>
+
+            <div className="testimonial-card">
+              <div className="stars-row">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={16} fill="var(--gold-accent)" color="var(--gold-accent)" />
+                ))}
+              </div>
+              <p className="testimonial-quote">"Stunning craftsmanship. The Blush Rose Gold Pendant is delicate but has a solid weight. It's a gorgeous everyday luxury accessory. Dark mode on this website makes browsing so luxurious."</p>
+              <div className="testimonial-author">
+                <strong>Hadiza M.</strong>
+                <span>Kano, Nigeria</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* VIP Club newsletter */}
+      <RoyaltyVIPClub onSubscribeSuccess={onSubscribeSuccess} />
+
+      {/* FAQ Section */}
+      <section id="faq" className="faq-section container">
+        <div className="section-header">
+          <h2 className="section-title">Frequently Asked Questions</h2>
+          <p className="section-subtitle">Got questions? We have answers to help you navigate your luxury purchase.</p>
+        </div>
+        <div className="faq-list">
+          {[
+            {
+              q: "How do I make a payment for my order?",
+              a: "Once you click 'Order via WhatsApp', your cart details will be forwarded directly to us. We will verify availability and send our official bank details for payment. We accept direct bank transfers and standard online payment links."
+            },
+            {
+              q: "Do you deliver nationwide across Nigeria?",
+              a: "Yes, we offer fully insured nationwide delivery across all 36 states. Deliveries in Lagos take 24–48 hours, while other major cities (Abuja, Port Harcourt, Kano, etc.) take 3–5 working days."
+            },
+            {
+              q: "Can I order custom-size rings or bespoke jewelry designs?",
+              a: "Absolutely! We specialize in custom designs. Simply start a chat with us on WhatsApp or specify in your order if you require a particular ring size or custom engravings. We will guide you through the measurements."
+            },
+            {
+              q: "What is your return and exchange policy?",
+              a: "As a luxury jewelry boutique, we stand behind our quality. We offer exchanges within 7 days of delivery for standard items, provided they are in pristine, unworn condition. Custom bespoke orders are final sale but carry a lifetime warranty on materials."
+            }
+          ].map((item, index) => (
+            <div key={index} className={`faq-item ${activeFaq === index ? 'active' : ''}`}>
+              <button 
+                className="faq-question" 
+                onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+              >
+                <span>{item.q}</span>
+                {activeFaq === index ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </button>
+              <div className="faq-answer">
+                <p>{item.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
@@ -685,6 +1400,34 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts }) {
                   ))}
                 </tbody>
               </table>
+
+              {/* Mobile Card Layout for small screens */}
+              <div className="admin-mobile-cards">
+                {products.map(p => (
+                  <div key={p.id} className="admin-mobile-card">
+                    <img src={p.image} alt={p.title} className="admin-card-img-mobile" />
+                    <div className="admin-card-details-mobile">
+                      <span className="admin-card-cat-mobile">{p.category}</span>
+                      <h3 className="admin-card-title-mobile">{p.title}</h3>
+                      <div className="admin-card-price-mobile">{formatPrice(p.price)}</div>
+                      <p className="admin-card-desc-mobile">{p.description || 'No description'}</p>
+                      <button 
+                        onClick={() => handleDeleteProduct(p.id)}
+                        className="delete-btn mobile-delete-btn"
+                        disabled={deleteLoadingId === p.id}
+                      >
+                        {deleteLoadingId === p.id ? (
+                          <Loader2 className="animate-spin" size={14} />
+                        ) : (
+                          <>
+                            <Trash2 size={14} /> Remove Product
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -707,6 +1450,12 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('crown_dark_mode') === 'true';
   });
+
+  // Modal and Interactive States
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [isSizingOpen, setIsSizingOpen] = useState(false);
+  const [toast, setToast] = useState({ message: '', visible: false });
 
   // Fetch products from database API
   const fetchProducts = async () => {
@@ -774,6 +1523,25 @@ export default function App() {
     setCart(prevCart => prevCart.filter(item => item.id !== id));
   };
 
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsQuickViewOpen(true);
+  };
+
+  const showToast = (message) => {
+    setToast({ message, visible: true });
+  };
+
+  const handleSearchFocus = () => {
+    setTimeout(() => {
+      const searchInput = document.getElementById('shop-search-input');
+      if (searchInput) {
+        searchInput.focus();
+        searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  };
+
   return (
     <BrowserRouter>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -793,6 +1561,9 @@ export default function App() {
                   products={products} 
                   loading={loading} 
                   addToCart={addToCart} 
+                  onProductClick={handleProductClick}
+                  onSizingOpen={() => setIsSizingOpen(true)}
+                  onSubscribeSuccess={showToast}
                 />
               } 
             />
@@ -815,6 +1586,31 @@ export default function App() {
           cart={cart}
           updateQuantity={updateQuantity}
           removeFromCart={removeFromCart}
+        />
+
+        <QuickViewModal 
+          product={selectedProduct}
+          isOpen={isQuickViewOpen}
+          onClose={() => setIsQuickViewOpen(false)}
+          addToCart={addToCart}
+          onSizingOpen={() => setIsSizingOpen(true)}
+        />
+        
+        <SizingModal 
+          isOpen={isSizingOpen}
+          onClose={() => setIsSizingOpen(false)}
+        />
+
+        <MobileBottomNav 
+          onCartOpen={() => setIsCartOpen(true)}
+          cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
+          onSearchFocus={handleSearchFocus}
+        />
+
+        <Toast 
+          message={toast.message}
+          visible={toast.visible}
+          onClose={() => setToast({ ...toast, visible: false })}
         />
 
         {/* Footer */}
@@ -846,7 +1642,7 @@ export default function App() {
           </div>
           <div className="container footer-bottom">
             <p>&copy; {new Date().getFullYear()} Crown Collection. Crafted with royal elegance.</p>
-            <p>Developed with React & Node.js</p>
+            <p>Developed with ❤️| Built by GHDCODES</p>
           </div>
         </footer>
       </div>

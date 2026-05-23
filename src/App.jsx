@@ -8,6 +8,56 @@ import {
   Home, Mail, Eye, Ruler, Instagram
 } from 'lucide-react';
 
+// ==========================================
+// COMPONENT: SCROLL REVEAL WRAPPER
+// ==========================================
+function Reveal({ children, delay = 0, effect = 'fade-in-up', className = '', as = 'div', ...props }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = React.useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    const currentElement = elementRef.current;
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        observer.unobserve(currentElement);
+      }
+    };
+  }, []);
+
+  const getEffectClass = () => {
+    if (effect === 'fade-in') return 'reveal-fade';
+    if (effect === 'scale') return 'reveal-scale';
+    return 'reveal-fade-in-up';
+  };
+
+  const Component = as;
+
+  return (
+    <Component
+      ref={elementRef}
+      className={`reveal-element ${getEffectClass()} ${isVisible ? 'reveal-visible' : ''} ${className}`}
+      style={{ transitionDelay: `${delay}ms`, ...props.style }}
+      {...props}
+    >
+      {children}
+    </Component>
+  );
+}
+
 // Price Formatter Helper
 const formatPrice = (price) => {
   return new Intl.NumberFormat('en-NG', {
@@ -113,7 +163,7 @@ function CartDrawer({ isOpen, onClose, cart, updateQuantity, removeFromCart }) {
         particleCount: 150,
         spread: 80,
         origin: { y: 0.5 },
-        colors: ['#d4af37', '#d97d99', '#ffffff']
+        colors: ['#c92c61', '#c49682', '#ffffff']
       });
     });
 
@@ -508,14 +558,20 @@ function SignatureCollections({ onSelectCategory }) {
 
   return (
     <section className="signature-collections-section container">
-      <div className="section-header">
+      <Reveal className="section-header">
         <h2 className="section-title">The Signature Series</h2>
         <p className="section-subtitle">Explore our hand-matched premium collections, curated for exquisite tastes and special milestones.</p>
-      </div>
+      </Reveal>
       
       <div className="sig-grid">
-        {collections.map(col => (
-          <div key={col.id} className="sig-card" onClick={() => onSelectCategory(col.category)}>
+        {collections.map((col, index) => (
+          <Reveal 
+            key={col.id} 
+            as="div" 
+            className="sig-card" 
+            delay={index * 150}
+            onClick={() => onSelectCategory(col.category)}
+          >
             <img src={col.image} alt={col.title} className="sig-card-img" />
             <div className="sig-card-overlay">
               <span className="sig-card-subtitle">{col.subtitle}</span>
@@ -524,7 +580,7 @@ function SignatureCollections({ onSelectCategory }) {
                 Shop Collection <ChevronRight size={14} />
               </span>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>
@@ -562,19 +618,25 @@ function StyleGallery() {
 
   return (
     <section className="gallery-section container">
-      <div className="section-header">
+      <Reveal className="section-header">
         <h2 className="section-title">Royal Showcases</h2>
         <p className="section-subtitle">Browse how our clients style Crown Collection pieces for major occasions and everyday luxury.</p>
-      </div>
+      </Reveal>
       <div className="gallery-grid">
-        {galleryItems.map(item => (
-          <div key={item.id} className="gallery-item-wrapper" onClick={() => setActiveImage(item)}>
+        {galleryItems.map((item, index) => (
+          <Reveal 
+            key={item.id} 
+            as="div" 
+            className="gallery-item-wrapper" 
+            delay={index * 120}
+            onClick={() => setActiveImage(item)}
+          >
             <img src={item.image} alt={item.caption} className="gallery-img" />
             <div className="gallery-overlay-hover">
               <Eye size={24} className="gallery-eye-icon" />
               <span>Zoom Styling View</span>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
       
@@ -625,7 +687,7 @@ function RoyaltyVIPClub({ onSubscribeSuccess }) {
           particleCount: 80,
           spread: 60,
           origin: { y: 0.8 },
-          colors: ['#d4af37', '#d97d99', '#ffffff']
+          colors: ['#c92c61', '#c49682', '#ffffff']
         });
       });
     }, 1000);
@@ -634,7 +696,7 @@ function RoyaltyVIPClub({ onSubscribeSuccess }) {
   return (
     <section className="vip-newsletter-section">
       <div className="container">
-        <div className="vip-newsletter-card">
+        <Reveal as="div" effect="scale" className="vip-newsletter-card">
           <div className="vip-newsletter-icon">
             <Mail size={32} />
           </div>
@@ -662,7 +724,7 @@ function RoyaltyVIPClub({ onSubscribeSuccess }) {
             </div>
             {error && <span className="vip-error-text">{error}</span>}
           </form>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -695,9 +757,9 @@ function Toast({ message, visible, onClose }) {
 }
 
 // ==========================================
-// VIEW: LANDING STORE FRONT
+// COMPONENT: STOREFRONT (LANDING PAGE)
 // ==========================================
-function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen, onSubscribeSuccess }) {
+function StoreFront({ products, siteSettings, loading, addToCart, onProductClick, onSizingOpen, onSubscribeSuccess }) {
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('featured');
@@ -723,56 +785,72 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
       <section id="hero" className="hero">
         <div className="container hero-grid">
           <div>
-            <span className="hero-subtitle">Premium Jewelry Collection</span>
-            <h1 className="hero-title luxury-text-gradient">Crafted For Elegance & Majesty</h1>
-            <p className="hero-description">
-              Discover timeless crown jewels, bespoke diamond rings, and premium accessories tailored for those who demand nothing less than royalty.
-            </p>
-            <a href="#shop" className="cta-button" onClick={(e) => {
-              e.preventDefault();
-              const element = document.getElementById('shop');
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              Explore Collection
-              <Sparkles size={18} />
-            </a>
+            <Reveal delay={100}>
+              <span className="hero-subtitle">{siteSettings?.heroSubtitle || "Premium Jewelry Collection"}</span>
+            </Reveal>
+            <Reveal delay={250}>
+              <h1 className="hero-title luxury-text-gradient">{siteSettings?.heroTitle || "Crafted For Elegance & Majesty"}</h1>
+            </Reveal>
+            <Reveal delay={400}>
+              <p className="hero-description">
+                {siteSettings?.heroDescription || "Discover timeless crown jewels, bespoke diamond rings, and premium accessories tailored for those who demand nothing less than royalty."}
+              </p>
+            </Reveal>
+            <Reveal delay={550}>
+              <a href="#shop" className="cta-button" onClick={(e) => {
+                e.preventDefault();
+                const element = document.getElementById('shop');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                Explore Collection
+                <Sparkles size={18} />
+              </a>
+            </Reveal>
           </div>
           
-          <div className="hero-image-container">
-            <div className="hero-circle-bg"></div>
-            <img 
-              src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80" 
-              alt="Luxury Crown Collection Jewels" 
-              className="hero-img"
-            />
-          </div>
+          <Reveal as="div" effect="fade-in" delay={300} className="hero-image-container">
+            <div className="glass-badge" style={{ top: '15%', left: '-15%' }}>
+              ✨ 2030 Collection
+            </div>
+            <div className="glass-badge" style={{ bottom: '20%', right: '-10%' }}>
+              <ShieldCheck size={16} /> Authentic
+            </div>
+            
+            <div className="hero-arch">
+              <img 
+                src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80" 
+                alt="Luxury Crown Collection Jewels" 
+                className="hero-img"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Features Bar */}
       <section className="features-bar">
         <div className="container features-grid">
-          <div className="feature-item">
+          <Reveal as="div" className="feature-item" delay={100}>
             <Truck size={24} className="feature-icon" />
             <div>
               <h3>Secure Nationwide Delivery</h3>
               <p>Fully insured courier shipping across Nigeria</p>
             </div>
-          </div>
-          <div className="feature-item">
+          </Reveal>
+          <Reveal as="div" className="feature-item" delay={250}>
             <Award size={24} className="feature-icon" />
             <div>
               <h3>100% Certified Gold</h3>
               <p>Sourced ethically and verified for absolute purity</p>
             </div>
-          </div>
-          <div className="feature-item">
+          </Reveal>
+          <Reveal as="div" className="feature-item" delay={400}>
             <ShieldCheck size={24} className="feature-icon" />
             <div>
               <h3>Secure WhatsApp Checkout</h3>
               <p>Direct confirmations with our customer support</p>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -785,10 +863,10 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
 
       {/* Shop Catalog Section */}
       <section id="shop" className="shop-section container">
-        <div className="section-header">
+        <Reveal className="section-header">
           <h2 className="section-title">The Royal Catalog</h2>
           <p className="section-subtitle">Browse our hand-selected items, crafted in fine gold, silver, and embedded with pristine gemstones.</p>
-        </div>
+        </Reveal>
 
         <div className="filters-bar">
           <div className="categories-container">
@@ -804,7 +882,7 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
             <button 
               onClick={onSizingOpen}
               className="category-btn sizing-helper-btn"
-              style={{ color: 'var(--gold-accent)', borderColor: 'rgba(212, 175, 55, 0.4)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              style={{ color: 'var(--gold-accent)', borderColor: 'rgba(194, 166, 136, 0.4)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
               <Ruler size={14} /> Size Guide
             </button>
@@ -852,8 +930,15 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
           </div>
         ) : (
           <div className="products-grid">
-            {filteredProducts.map(product => (
-              <article key={product.id} className="product-card" onClick={() => onProductClick(product)} style={{ cursor: 'pointer' }}>
+            {filteredProducts.map((product, index) => (
+              <Reveal 
+                key={product.id} 
+                as="article" 
+                className="product-card" 
+                delay={(index % 4) * 100}
+                onClick={() => onProductClick(product)} 
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="product-image-wrapper">
                   <span className="product-badge">New</span>
                   <img src={product.image || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&auto=format&fit=crop&q=80'} alt={product.title} className="product-image" loading="lazy" />
@@ -880,7 +965,7 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
                     </button>
                   </div>
                 </div>
-              </article>
+              </Reveal>
             ))}
           </div>
         )}
@@ -889,7 +974,7 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
       {/* Craftsmanship Section */}
       <section id="heritage" className="craftsmanship-section">
         <div className="container craftsmanship-grid">
-          <div className="craftsmanship-content">
+          <Reveal as="div" className="craftsmanship-content" delay={100}>
             <span className="hero-subtitle">Our Heritage</span>
             <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '20px' }}>Royal Craftsmanship & Nigerian Majesty</h2>
             <p className="craftsmanship-p">
@@ -908,15 +993,15 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
                 <span>Pristine diamond cuts that refract light from all angles.</span>
               </div>
             </div>
-          </div>
-          <div className="craftsmanship-image-wrapper">
+          </Reveal>
+          <Reveal as="div" effect="scale" className="craftsmanship-image-wrapper" delay={250}>
             <div className="craftsmanship-image-badge">✨ Handcrafted</div>
             <img 
               src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&auto=format&fit=crop&q=80" 
               alt="Jeweler crafting premium rings" 
               className="craftsmanship-img"
             />
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -926,12 +1011,12 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
       {/* Testimonials Section */}
       <section id="reviews" className="testimonials-section">
         <div className="container">
-          <div className="section-header">
+          <Reveal className="section-header">
             <h2 className="section-title">Royal Reviews</h2>
             <p className="section-subtitle">What our distinguished clients say about our service and craftsmanship.</p>
-          </div>
+          </Reveal>
           <div className="testimonials-grid">
-            <div className="testimonial-card">
+            <Reveal as="div" className="testimonial-card" delay={100}>
               <div className="stars-row">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={16} fill="var(--gold-accent)" color="var(--gold-accent)" />
@@ -942,9 +1027,9 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
                 <strong>Chioma A.</strong>
                 <span>Lagos, Nigeria</span>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="testimonial-card">
+            <Reveal as="div" className="testimonial-card" delay={250}>
               <div className="stars-row">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={16} fill="var(--gold-accent)" color="var(--gold-accent)" />
@@ -955,9 +1040,9 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
                 <strong>Tunde O.</strong>
                 <span>Abuja, Nigeria</span>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="testimonial-card">
+            <Reveal as="div" className="testimonial-card" delay={400}>
               <div className="stars-row">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={16} fill="var(--gold-accent)" color="var(--gold-accent)" />
@@ -968,7 +1053,7 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
                 <strong>Hadiza M.</strong>
                 <span>Kano, Nigeria</span>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -978,10 +1063,10 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
 
       {/* FAQ Section */}
       <section id="faq" className="faq-section container">
-        <div className="section-header">
+        <Reveal className="section-header">
           <h2 className="section-title">Frequently Asked Questions</h2>
           <p className="section-subtitle">Got questions? We have answers to help you navigate your luxury purchase.</p>
-        </div>
+        </Reveal>
         <div className="faq-list">
           {[
             {
@@ -1001,7 +1086,12 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
               a: "As a luxury jewelry boutique, we stand behind our quality. We offer exchanges within 7 days of delivery for standard items, provided they are in pristine, unworn condition. Custom bespoke orders are final sale but carry a lifetime warranty on materials."
             }
           ].map((item, index) => (
-            <div key={index} className={`faq-item ${activeFaq === index ? 'active' : ''}`}>
+            <Reveal 
+              key={index} 
+              as="div" 
+              className={`faq-item ${activeFaq === index ? 'active' : ''}`}
+              delay={index * 100}
+            >
               <button 
                 className="faq-question" 
                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
@@ -1012,7 +1102,7 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
               <div className="faq-answer">
                 <p>{item.a}</p>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -1023,7 +1113,7 @@ function StoreFront({ products, loading, addToCart, onProductClick, onSizingOpen
 // ==========================================
 // VIEW: ADMIN CONSOLE
 // ==========================================
-function AdminConsole({ products, loadingProducts, onRefreshProducts }) {
+function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettings, onSettingsUpdated }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -1041,6 +1131,24 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts }) {
 
   // Delete State
   const [deleteLoadingId, setDeleteLoadingId] = useState(null);
+
+  // Settings State
+  const [heroTitle, setHeroTitle] = useState(siteSettings?.heroTitle || '');
+  const [heroSubtitle, setHeroSubtitle] = useState(siteSettings?.heroSubtitle || '');
+  const [heroDescription, setHeroDescription] = useState(siteSettings?.heroDescription || '');
+  const [themeColor, setThemeColor] = useState(siteSettings?.themeColor || 'pink');
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSuccess, setSettingsSuccess] = useState('');
+  const [settingsError, setSettingsError] = useState('');
+
+  useEffect(() => {
+    if (siteSettings) {
+      setHeroTitle(siteSettings.heroTitle);
+      setHeroSubtitle(siteSettings.heroSubtitle);
+      setHeroDescription(siteSettings.heroDescription);
+      setThemeColor(siteSettings.themeColor || 'pink');
+    }
+  }, [siteSettings]);
 
   // Simple Admin Login Authentication
   const handleLogin = (e) => {
@@ -1166,6 +1274,32 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts }) {
     }
   };
 
+  // Settings Submit Handler
+  const handleSettingsSubmit = async (e) => {
+    e.preventDefault();
+    setSettingsLoading(true);
+    setSettingsSuccess('');
+    setSettingsError('');
+
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ heroTitle, heroSubtitle, heroDescription, themeColor })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update settings');
+
+      setSettingsSuccess('Website configurations updated successfully!');
+      if (onSettingsUpdated) onSettingsUpdated();
+    } catch (err) {
+      setSettingsError(err.message || 'Error saving settings.');
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+
   // Login Form Gate View
   if (!isAuthenticated) {
     return (
@@ -1225,6 +1359,76 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts }) {
       </div>
 
       <div className="admin-grid">
+        {/* Settings Form Card */}
+        <div className="admin-card">
+          <h2 className="admin-card-title">Website Configurations</h2>
+          
+          {settingsSuccess && <div className="success-msg"><CheckCircle2 size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />{settingsSuccess}</div>}
+          {settingsError && <div className="error-msg"><AlertCircle size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />{settingsError}</div>}
+
+          <form onSubmit={handleSettingsSubmit}>
+            <div className="form-group">
+              <label className="form-label" htmlFor="heroTitle">Hero Banner Title</label>
+              <input 
+                type="text" 
+                id="heroTitle" 
+                value={heroTitle} 
+                onChange={(e) => setHeroTitle(e.target.value)} 
+                className="form-input" 
+                required 
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="heroSubtitle">Hero Subtitle (Eyebrow)</label>
+              <input 
+                type="text" 
+                id="heroSubtitle" 
+                value={heroSubtitle} 
+                onChange={(e) => setHeroSubtitle(e.target.value)} 
+                className="form-input" 
+                required 
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="heroDescription">Hero Description</label>
+              <textarea 
+                id="heroDescription" 
+                value={heroDescription} 
+                onChange={(e) => setHeroDescription(e.target.value)} 
+                className="form-textarea" 
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="themeColor">Luxury Color Theme</label>
+              <select 
+                id="themeColor" 
+                value={themeColor} 
+                onChange={(e) => setThemeColor(e.target.value)} 
+                className="form-select"
+              >
+                <option value="pink">Royal Pink (Default)</option>
+                <option value="emerald">Emerald Green</option>
+                <option value="sapphire">Sapphire Blue</option>
+              </select>
+            </div>
+
+            <button type="submit" className="submit-btn" disabled={settingsLoading}>
+              {settingsLoading ? (
+                <>
+                  <Loader2 className="animate-spin" size={18} style={{ display: 'inline', marginRight: '8px' }} />
+                  Saving...
+                </>
+              ) : (
+                'Save Settings'
+              )}
+            </button>
+          </form>
+        </div>
+
         {/* Upload Form Card */}
         <div className="admin-card">
           <h2 className="admin-card-title">Upload New Jewelry</h2>
@@ -1451,6 +1655,13 @@ export default function App() {
     return localStorage.getItem('crown_dark_mode') === 'true';
   });
 
+  const [siteSettings, setSiteSettings] = useState({
+    heroTitle: "Crafted For Elegance & Majesty",
+    heroSubtitle: "Premium Jewelry Collection",
+    heroDescription: "Discover timeless crown jewels hand-crafted with unmatched precision, destined for royalty.",
+    themeColor: "pink"
+  });
+
   // Modal and Interactive States
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -1471,9 +1682,27 @@ export default function App() {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/settings');
+      if (res.ok) {
+        const data = await res.json();
+        setSiteSettings(data);
+      }
+    } catch (err) {
+      console.error('Error fetching settings:', err);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchSettings();
   }, []);
+
+  // Sync theme to root HTML element
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', siteSettings.themeColor || 'pink');
+  }, [siteSettings.themeColor]);
 
   // Sync Cart to localStorage
   useEffect(() => {
@@ -1559,6 +1788,7 @@ export default function App() {
               element={
                 <StoreFront 
                   products={products} 
+                  siteSettings={siteSettings}
                   loading={loading} 
                   addToCart={addToCart} 
                   onProductClick={handleProductClick}
@@ -1574,6 +1804,8 @@ export default function App() {
                   products={products} 
                   loadingProducts={loading} 
                   onRefreshProducts={fetchProducts} 
+                  siteSettings={siteSettings}
+                  onSettingsUpdated={fetchSettings}
                 />
               } 
             />

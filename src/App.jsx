@@ -5,7 +5,7 @@ import {
   Upload, X, ChevronRight, Lock, ShieldCheck, ShoppingCart, 
   Sparkles, CheckCircle2, AlertCircle, ArrowLeft, Loader2,
   Award, Truck, Star, ChevronDown, ChevronUp,
-  Home, Mail, Eye, Ruler, Instagram, Phone,
+  Home, Mail, Eye, Ruler, Instagram, Phone, MapPin, Clock,
   MessageSquare, Send, Bot, User
 } from 'lucide-react';
 
@@ -252,14 +252,6 @@ function FloatingActionButtons() {
       <div className="fab-container-left">
         <button className="fab-up" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <ChevronUp size={24} />
-        </button>
-      </div>
-      <div className="fab-container-right">
-        <button className="fab-btn fab-whatsapp">
-          <Phone size={24} />
-        </button>
-        <button className="fab-btn fab-chat">
-          <Mail size={24} />
         </button>
       </div>
     </>
@@ -888,6 +880,156 @@ function Toast({ message, visible, onClose }) {
 }
 
 // ==========================================
+// COMPONENT: BOOKING SECTION
+// ==========================================
+function BookingSection() {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    service: '',
+    notes: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const text = `*New Booking Request*%0A%0AName: ${formData.fullName}%0AEmail: ${formData.email}%0AService: ${formData.service}%0ANotes: ${formData.notes}`;
+    window.open(`https://wa.me/2348029402971?text=${text}`, '_blank');
+  };
+
+  return (
+    <section id="booking" className="booking-section">
+      <div className="container booking-grid">
+        <Reveal effect="fade-in-up" className="booking-image-wrapper">
+          <div className="booking-image-bg-accent"></div>
+          <img src="https://images.unsplash.com/photo-1599643478524-fb66f70a00ac?w=800&auto=format&fit=crop&q=80" alt="Secure Your Slot" className="booking-image" />
+        </Reveal>
+        
+        <Reveal effect="fade-in-up" delay={200} className="booking-form-wrapper">
+          <h2 className="booking-title">Secure Your Slot</h2>
+          <p className="booking-subtitle">Ready for the Crown Experience? Fill out the form below.</p>
+          
+          <form className="booking-form" onSubmit={handleSubmit}>
+            <input 
+              type="text" 
+              placeholder="Full Name" 
+              className="booking-input" 
+              required
+              value={formData.fullName}
+              onChange={e => setFormData({...formData, fullName: e.target.value})}
+            />
+            <input 
+              type="email" 
+              placeholder="Email Address" 
+              className="booking-input" 
+              required
+              value={formData.email}
+              onChange={e => setFormData({...formData, email: e.target.value})}
+            />
+            <div className="select-wrapper">
+              <select 
+                className="booking-input booking-select" 
+                required
+                value={formData.service}
+                onChange={e => setFormData({...formData, service: e.target.value})}
+              >
+                <option value="" disabled>Select Service</option>
+                <option value="Custom Ring Design">Custom Ring Design</option>
+                <option value="Bridal Set Consultation">Bridal Set Consultation</option>
+                <option value="Jewelry Resizing/Repair">Jewelry Resizing/Repair</option>
+                <option value="General Consultation">General Consultation</option>
+              </select>
+              <ChevronDown className="select-icon" size={16} />
+            </div>
+            <textarea 
+              placeholder="Additional Notes (Date/Time preference)" 
+              className="booking-textarea"
+              rows={4}
+              value={formData.notes}
+              onChange={e => setFormData({...formData, notes: e.target.value})}
+            ></textarea>
+            
+            <div className="booking-submit-row">
+              <button type="submit" className="booking-submit-btn">
+                CONFIRM BOOKING 
+                <span className="submit-icon-wrapper">
+                  <MessageSquare size={20} />
+                </span>
+              </button>
+              
+              <button type="button" className="booking-whatsapp-circle" onClick={handleSubmit}>
+                <Phone size={24} color="#fff" fill="#fff" />
+              </button>
+            </div>
+          </form>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// ==========================================
+// COMPONENT: VISIT THE CROWN STORE
+// ==========================================
+function VisitCrownStore() {
+  const handleGetDirections = () => {
+    window.open("https://www.google.com/maps/search/?api=1&query=Tiana+Hairline+1,+Ikotun,+Lagos,+Nigeria", "_blank");
+  };
+
+  return (
+    <section className="dollhouse-section container">
+      <div className="dollhouse-grid">
+        <Reveal effect="fade-in-up" className="dollhouse-map-wrapper">
+          <div className="map-container">
+            <img 
+              src="/map-vintage.png" 
+              alt="CROWN Store Location Map" 
+              className="dollhouse-map-img" 
+            />
+            {/* Hot Pink Location Pin with Tooltip */}
+            <div className="map-pin-container">
+              <div className="map-pin-pulse"></div>
+              <div className="map-pin-icon">
+                <MapPin size={28} color="var(--primary-pink)" fill="var(--primary-pink)" />
+              </div>
+              <div className="map-tooltip">Ikotun, Lagos</div>
+            </div>
+          </div>
+        </Reveal>
+        
+        <Reveal effect="fade-in-up" delay={200} className="dollhouse-info-wrapper">
+          <h2 className="dollhouse-title">Visit The CROWN Store</h2>
+          <p className="dollhouse-subtitle">Come experience royal elegance and fine craftsmanship in person at our flagship boutique.</p>
+          
+          <div className="dollhouse-details">
+            <div className="dollhouse-detail-item">
+              <MapPin size={22} className="detail-icon" />
+              <span>Tiana Hairline 1, Ikotun, Lagos, Nigeria</span>
+            </div>
+            
+            <div className="dollhouse-detail-item align-start">
+              <Clock size={22} className="detail-icon" />
+              <div>
+                <p>Mon - Sat: 9:00 AM - 7:00 PM</p>
+                <p>Sun: 1:00 PM - 6:00 PM</p>
+              </div>
+            </div>
+            
+            <div className="dollhouse-detail-item">
+              <Phone size={22} className="detail-icon" />
+              <span><a href="tel:+2347048916429" className="hover-link">+2347048916429</a></span>
+            </div>
+          </div>
+          
+          <button onClick={handleGetDirections} className="directions-btn">
+            GET DIRECTIONS
+          </button>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// ==========================================
 // COMPONENT: STOREFRONT (LANDING PAGE)
 // ==========================================
 function StoreFront({ products, siteSettings, loading, addToCart, onProductClick, onSizingOpen, onSubscribeSuccess }) {
@@ -1195,6 +1337,9 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
         </div>
       </section>
 
+      {/* Booking Section */}
+      <BookingSection />
+
       {/* VIP Club newsletter */}
       <RoyaltyVIPClub onSubscribeSuccess={onSubscribeSuccess} />
 
@@ -1243,6 +1388,9 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           ))}
         </div>
       </section>
+
+      {/* Visit The CROWN Store Section */}
+      <VisitCrownStore />
     </div>
   );
 }
@@ -1871,13 +2019,22 @@ function ChatBot() {
         </div>
       )}
 
-      <button 
-        className="fab-btn chatbot-fab" 
-        onClick={() => setIsOpen(!isOpen)}
-        style={{ zIndex: 1000 }}
-      >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
-      </button>
+      <div className="fab-column">
+        <a 
+          href="https://wa.me/2348029402971" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="fab-btn fab-whatsapp"
+        >
+          <Phone size={24} />
+        </a>
+        <button 
+          className="fab-btn chatbot-fab" 
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
+        </button>
+      </div>
     </div>
   );
 }

@@ -58,6 +58,60 @@ function Reveal({ children, delay = 0, effect = 'fade-in-up', className = '', as
   );
 }
 
+// ==========================================
+// COMPONENT: CUSTOM LUXURY CURSOR
+// ==========================================
+function CustomCursor() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    // Only run on desktop
+    if (window.innerWidth <= 768) return;
+
+    const updatePosition = (e) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (target.tagName.toLowerCase() === 'button' || target.tagName.toLowerCase() === 'a' || target.closest('button') || target.closest('a')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mousemove', updatePosition);
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mousemove', updatePosition);
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
+
+  if (typeof window !== 'undefined' && window.innerWidth <= 768) return null;
+
+  return (
+    <>
+      <div className="cursor-dot" style={{ left: `${position.x}px`, top: `${position.y}px` }} />
+      <div className={`cursor-outline ${isHovering ? 'hovering' : ''}`} style={{ left: `${position.x}px`, top: `${position.y}px` }} />
+    </>
+  );
+}
+
+// ==========================================
+// COMPONENT: FLOATING TRUST BADGE
+// ==========================================
+function TrustBadge() {
+  return (
+    <div className="floating-trust-badge">
+      <ShieldCheck size={16} style={{ color: 'var(--gold-accent)' }} />
+      <span>100% Certified 18k Gold</span>
+    </div>
+  );
+}
+
 // Price Formatter Helper
 const formatPrice = (price) => {
   return new Intl.NumberFormat('en-NG', {
@@ -118,10 +172,6 @@ function Navbar({ cartCount, onCartOpen }) {
             <ShoppingBag size={20} />
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
           </button>
-          
-          <Link to="/admin" className="icon-btn" title="Admin Panel">
-            <Lock size={18} />
-          </Link>
         </div>
       </div>
     </nav>
@@ -372,9 +422,9 @@ function MobileBottomNav({ onCartOpen, cartCount, onSearchFocus }) {
         </div>
         <span>Cart</span>
       </button>
-      <button onClick={() => navigate('/admin')} className={`mobile-nav-item ${location.pathname === '/admin' ? 'active' : ''}`} aria-label="Admin Access">
-        <Lock size={20} />
-        <span>Admin</span>
+      <button onClick={() => window.open('https://wa.me/2348029402971', '_blank')} className="mobile-nav-item" aria-label="Contact">
+        <Phone size={20} />
+        <span>Contact</span>
       </button>
     </div>
   );
@@ -906,8 +956,6 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
         </div>
       </section>
 
-      <CountdownTimer />
-
       {/* Features Bar */}
       <section className="features-bar">
         <div className="container features-grid">
@@ -934,6 +982,8 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           </Reveal>
         </div>
       </section>
+
+      <CountdownTimer />
 
       <MarqueeBanner />
 
@@ -1846,7 +1896,9 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
+        <CustomCursor />
+        <TrustBadge />
         <Navbar 
           cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)} 
           onCartOpen={() => setIsCartOpen(true)}
@@ -1938,7 +1990,6 @@ export default function App() {
                 <li><a href="https://wa.me/2348029402971" target="_blank" rel="noopener noreferrer">Contact WhatsApp Support</a></li>
                 <li><a href="#shop">Shipping & Delivery</a></li>
                 <li><a href="#shop">Sizing Guide</a></li>
-                <li><a href="/admin">Owner Portal Login</a></li>
               </ul>
             </div>
           </div>

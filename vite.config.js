@@ -84,6 +84,8 @@ const vercelApiMiddleware = () => ({
 export default defineConfig({
   plugins: [react(), vercelApiMiddleware()],
   server: {
-    port: 3000
+    port: 3500,
+    host: true,
+    open: true
   }
 });

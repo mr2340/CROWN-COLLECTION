@@ -5,7 +5,7 @@ import {
   Upload, X, ChevronRight, Lock, ShieldCheck, ShoppingCart, 
   Sparkles, CheckCircle2, AlertCircle, ArrowLeft, Loader2,
   Award, Truck, Star, ChevronDown, ChevronUp,
-  Home, Mail, Eye, Ruler, Instagram
+  Home, Mail, Eye, Ruler, Instagram, Phone
 } from 'lucide-react';
 
 // ==========================================
@@ -70,7 +70,7 @@ const formatPrice = (price) => {
 // ==========================================
 // COMPONENT: NAVBAR
 // ==========================================
-function Navbar({ cartCount, onCartOpen, darkMode, toggleDarkMode }) {
+function Navbar({ cartCount, onCartOpen }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -95,8 +95,8 @@ function Navbar({ cartCount, onCartOpen, darkMode, toggleDarkMode }) {
   return (
     <nav className="navbar">
       <div className="container navbar-container">
-        <Link to="/" className="nav-logo">
-          ✨ CROWN <span>COLLECTION</span>
+        <Link to="/" className="nav-logo" style={{ color: '#fff' }}>
+          CROWN <span style={{ color: 'var(--primary-pink)' }}>COLLECTION</span>
         </Link>
         
         {/* Desktop Navigation Links */}
@@ -108,15 +108,7 @@ function Navbar({ cartCount, onCartOpen, darkMode, toggleDarkMode }) {
         </div>
         
         <div className="nav-actions">
-          <button 
-            onClick={toggleDarkMode} 
-            className="icon-btn" 
-            aria-label="Toggle Dark Mode"
-            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            {darkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
-          </button>
-          
+
           <button 
             onClick={onCartOpen} 
             className="icon-btn" 
@@ -135,6 +127,93 @@ function Navbar({ cartCount, onCartOpen, darkMode, toggleDarkMode }) {
     </nav>
   );
 }
+
+// ==========================================
+// NEW: DARK MODE COMPONENTS
+// ==========================================
+function CountdownTimer() {
+  return (
+    <div className="countdown-container">
+      <div className="countdown-box">
+        <span className="time">09</span>
+        <span className="label">Days</span>
+      </div>
+      <div className="countdown-box">
+        <span className="time">23</span>
+        <span className="label">Hrs</span>
+      </div>
+      <div className="countdown-box">
+        <span className="time">59</span>
+        <span className="label">Mins</span>
+      </div>
+      <div className="countdown-box">
+        <span className="time">18</span>
+        <span className="label">Secs</span>
+      </div>
+    </div>
+  );
+}
+
+function MarqueeBanner() {
+  return (
+    <div className="marquee-container">
+      <div className="marquee-content">
+        <span>LUXURY JEWELRY</span>
+        <span>BONE STRAIGHT DIAMONDS</span>
+        <span>CUSTOM CROWNS</span>
+        <span>SEAMLESS DESIGNS</span>
+        <span>LUXURY JEWELRY</span>
+        <span>BONE STRAIGHT DIAMONDS</span>
+      </div>
+    </div>
+  );
+}
+
+function MeetTheJeweler() {
+  return (
+    <section className="meet-artist">
+      <div className="container meet-artist-grid">
+        <Reveal delay={200} effect="scale">
+          <img 
+            src="https://images.unsplash.com/photo-1599643478514-4a4e09b52342?q=80&w=800&auto=format&fit=crop" 
+            alt="The Jeweler at Work" 
+            className="meet-artist-img"
+          />
+        </Reveal>
+        <Reveal delay={400}>
+          <h2>Meet The Jeweler</h2>
+          <p>
+            With over two decades of mastering the art of bespoke luxury, our master jeweler 
+            blends traditional craftsmanship with avant-garde aesthetics. Every piece is a 
+            testament to uncompromising quality, designed exclusively for those who demand 
+            nothing but absolute perfection.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function FloatingActionButtons() {
+  return (
+    <>
+      <div className="fab-container-left">
+        <button className="fab-up" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <ChevronUp size={24} />
+        </button>
+      </div>
+      <div className="fab-container-right">
+        <button className="fab-btn fab-whatsapp">
+          <Phone size={24} />
+        </button>
+        <button className="fab-btn fab-chat">
+          <Mail size={24} />
+        </button>
+      </div>
+    </>
+  );
+}
+
 
 // ==========================================
 // COMPONENT: CART DRAWER
@@ -781,6 +860,7 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
 
   return (
     <div>
+      <CountdownTimer />
       {/* Hero Section */}
       <section id="hero" className="hero">
         <div className="container hero-grid">
@@ -853,6 +933,10 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           </Reveal>
         </div>
       </section>
+
+      <MarqueeBanner />
+
+      <MeetTheJeweler />
 
       {/* Signature Collections Showcase */}
       <SignatureCollections onSelectCategory={(cat) => {
@@ -1402,19 +1486,6 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="themeColor">Luxury Color Theme</label>
-              <select 
-                id="themeColor" 
-                value={themeColor} 
-                onChange={(e) => setThemeColor(e.target.value)} 
-                className="form-select"
-              >
-                <option value="pink">Royal Pink (Default)</option>
-                <option value="emerald">Emerald Green</option>
-                <option value="sapphire">Sapphire Blue</option>
-              </select>
-            </div>
 
             <button type="submit" className="submit-btn" disabled={settingsLoading}>
               {settingsLoading ? (
@@ -1647,13 +1718,16 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('crown_cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem('crown_cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (err) {
+      console.error('Error parsing cart from localStorage:', err);
+      return [];
+    }
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('crown_dark_mode') === 'true';
-  });
+  const [darkMode, setDarkMode] = useState(true);
 
   const [siteSettings, setSiteSettings] = useState({
     heroTitle: "Crafted For Elegance & Majesty",
@@ -1719,9 +1793,7 @@ export default function App() {
     localStorage.setItem('crown_dark_mode', String(darkMode));
   }, [darkMode]);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+
 
   // Cart Functions
   const addToCart = (product) => {
@@ -1777,8 +1849,6 @@ export default function App() {
         <Navbar 
           cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)} 
           onCartOpen={() => setIsCartOpen(true)}
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
         />
         
         <main style={{ flexGrow: 1 }}>
@@ -1805,7 +1875,6 @@ export default function App() {
                   loadingProducts={loading} 
                   onRefreshProducts={fetchProducts} 
                   siteSettings={siteSettings}
-                  onSettingsUpdated={fetchSettings}
                 />
               } 
             />

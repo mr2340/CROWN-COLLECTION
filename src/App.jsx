@@ -2195,6 +2195,7 @@ export default function App() {
     <BrowserRouter>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
         <CustomCursor />
+        <TermsBanner />
         <TrustBadge />
         <Navbar
           cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}

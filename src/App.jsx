@@ -181,6 +181,53 @@ function Navbar({ cartCount, onCartOpen }) {
 }
 
 
+// ==========================================
+// COMPONENT: TERMS AND CONDITIONS BANNER
+// ==========================================
+function TermsBanner() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('crown-terms-consent');
+    if (!consent) {
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem('crown-terms-consent', 'true');
+    setIsOpen(false);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="terms-banner-overlay">
+      <div className="terms-banner-card">
+        <div className="terms-banner-content">
+          <div className="terms-icon-wrapper">
+            <ShieldCheck size={24} className="terms-icon" />
+          </div>
+          <div className="terms-text-container">
+            <h4>Terms &amp; Conditions Agreement</h4>
+            <p>
+              By continuing to browse this site, you agree to our terms of service, custom jewelry sales agreement, and fully insured delivery policies.
+            </p>
+          </div>
+        </div>
+        <div className="terms-actions">
+          <button onClick={handleAccept} className="terms-accept-btn">
+            Accept &amp; Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MarqueeBanner() {
   return (
     <div className="marquee-container">
@@ -1101,8 +1148,6 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           </Reveal>
         </div>
       </section>
-
-      <CountdownTimer />
 
       <MarqueeBanner />
 

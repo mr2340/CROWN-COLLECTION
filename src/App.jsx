@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  ShoppingBag, Sun, Moon, Plus, Minus, Trash2, Search, 
-  Upload, X, ChevronRight, Lock, ShieldCheck, ShoppingCart, 
+import {
+  ShoppingBag, Sun, Moon, Plus, Minus, Trash2, Search,
+  Upload, X, ChevronRight, Lock, ShieldCheck, ShoppingCart,
   Sparkles, CheckCircle2, AlertCircle, ArrowLeft, Loader2,
   Award, Truck, Star, ChevronDown, ChevronUp,
   Home, Mail, Eye, Ruler, Instagram, Phone, MapPin, Clock,
@@ -74,7 +74,7 @@ function CustomCursor() {
     const updatePosition = (e) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
-    
+
     const handleMouseOver = (e) => {
       const target = e.target;
       if (target.tagName.toLowerCase() === 'button' || target.tagName.toLowerCase() === 'a' || target.closest('button') || target.closest('a')) {
@@ -154,7 +154,7 @@ function Navbar({ cartCount, onCartOpen }) {
         <Link to="/" className="nav-logo" style={{ color: '#fff' }}>
           CROWN <span style={{ color: 'var(--primary-pink)' }}>COLLECTION</span>
         </Link>
-        
+
         {/* Desktop Navigation Links */}
         <div className="nav-links">
           <a href="#shop" onClick={(e) => handleScrollTo(e, 'shop')} className="nav-link-item">Shop</a>
@@ -162,12 +162,12 @@ function Navbar({ cartCount, onCartOpen }) {
           <a href="#reviews" onClick={(e) => handleScrollTo(e, 'reviews')} className="nav-link-item">Reviews</a>
           <a href="#faq" onClick={(e) => handleScrollTo(e, 'faq')} className="nav-link-item">FAQ</a>
         </div>
-        
+
         <div className="nav-actions">
 
-          <button 
-            onClick={onCartOpen} 
-            className="icon-btn" 
+          <button
+            onClick={onCartOpen}
+            className="icon-btn"
             aria-label="Open Cart"
             title="Open Shopping Cart"
           >
@@ -180,31 +180,6 @@ function Navbar({ cartCount, onCartOpen }) {
   );
 }
 
-// ==========================================
-// NEW: DARK MODE COMPONENTS
-// ==========================================
-function CountdownTimer() {
-  return (
-    <div className="countdown-container">
-      <div className="countdown-box">
-        <span className="time">09</span>
-        <span className="label">Days</span>
-      </div>
-      <div className="countdown-box">
-        <span className="time">23</span>
-        <span className="label">Hrs</span>
-      </div>
-      <div className="countdown-box">
-        <span className="time">59</span>
-        <span className="label">Mins</span>
-      </div>
-      <div className="countdown-box">
-        <span className="time">18</span>
-        <span className="label">Secs</span>
-      </div>
-    </div>
-  );
-}
 
 function MarqueeBanner() {
   return (
@@ -226,18 +201,18 @@ function MeetTheJeweler() {
     <section className="meet-artist">
       <div className="container meet-artist-grid">
         <Reveal delay={200} effect="scale">
-          <img 
-            src="https://images.unsplash.com/photo-1599643478514-4a4e09b52342?q=80&w=800&auto=format&fit=crop" 
-            alt="The Jeweler at Work" 
+          <img
+            src="https://images.unsplash.com/photo-1599643478514-4a4e09b52342?q=80&w=800&auto=format&fit=crop"
+            alt="The Jeweler at Work"
             className="meet-artist-img"
           />
         </Reveal>
         <Reveal delay={400}>
           <h2>Meet The Jeweler</h2>
           <p>
-            With over two decades of mastering the art of bespoke luxury, our master jeweler 
-            blends traditional craftsmanship with avant-garde aesthetics. Every piece is a 
-            testament to uncompromising quality, designed exclusively for those who demand 
+            With over two decades of mastering the art of bespoke luxury, our master jeweler
+            blends traditional craftsmanship with avant-garde aesthetics. Every piece is a
+            testament to uncompromising quality, designed exclusively for those who demand
             nothing but absolute perfection.
           </p>
         </Reveal>
@@ -269,17 +244,17 @@ function CartDrawer({ isOpen, onClose, cart, updateQuantity, removeFromCart }) {
 
   const handleCheckout = () => {
     if (cart.length === 0) return;
-    
+
     // Format cart text for WhatsApp
-    const itemsText = cart.map(item => 
+    const itemsText = cart.map(item =>
       `- ${item.quantity}x ${item.title} (${formatPrice(item.price * item.quantity)})`
     ).join('\n');
-    
+
     const totalText = formatPrice(getCartTotal());
-    
+
     const message = `Hello Crown Collection ⚡\n\nI would like to place an order for the following jewelry:\n\n${itemsText}\n\n*Total:* ${totalText}\n\nCan you please confirm availability and payment details? Thank you!`;
     const whatsappUrl = `https://wa.me/2348029402971?text=${encodeURIComponent(message)}`;
-    
+
     // Confetti effect
     import('canvas-confetti').then((confetti) => {
       confetti.default({
@@ -308,7 +283,7 @@ function CartDrawer({ isOpen, onClose, cart, updateQuantity, removeFromCart }) {
             <X size={20} />
           </button>
         </div>
-        
+
         <div className="cart-items">
           {cart.length === 0 ? (
             <div className="cart-empty-state">
@@ -347,7 +322,7 @@ function CartDrawer({ isOpen, onClose, cart, updateQuantity, removeFromCart }) {
             ))
           )}
         </div>
-        
+
         {cart.length > 0 && (
           <div className="cart-footer">
             <div className="cart-summary-row">
@@ -375,7 +350,7 @@ function CartDrawer({ isOpen, onClose, cart, updateQuantity, removeFromCart }) {
 function MobileBottomNav({ onCartOpen, cartCount, onSearchFocus }) {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const handleNav = (targetId) => {
     if (location.pathname !== '/') {
       navigate('/');
@@ -442,7 +417,7 @@ function SizingModal({ isOpen, onClose }) {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', fontSize: '15px' }}>
             Ensure your jewelry fits like royalty. Follow these steps to measure your perfect ring size at home.
           </p>
-          
+
           <div className="sizing-steps" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div className="step-item" style={{ borderLeft: '3px solid var(--primary-pink)', paddingLeft: '16px' }}>
               <strong style={{ display: 'block', marginBottom: '4px' }}>Step 1: Wrap</strong>
@@ -457,7 +432,7 @@ function SizingModal({ isOpen, onClose }) {
               <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Lay the paper flat and measure the distance in millimeters (circumference). Match it against the table below:</span>
             </div>
           </div>
-          
+
           <table className="sizing-table" style={{ width: '100%', marginTop: '24px', borderCollapse: 'collapse', fontSize: '14px' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left' }}>
@@ -494,14 +469,14 @@ function SizingModal({ isOpen, onClose }) {
               </tr>
             </tbody>
           </table>
-          
+
           <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
-            <button 
+            <button
               onClick={() => {
                 const message = `Hello Crown Collection ⚡\n\nI need help measuring my ring size. Can you send me a digital size print template?`;
                 window.open(`https://wa.me/2348029402971?text=${encodeURIComponent(message)}`, '_blank');
               }}
-              className="cta-button" 
+              className="cta-button"
               style={{ fontSize: '13px', padding: '10px 20px', backgroundColor: 'var(--gold-accent)' }}
             >
               Get Sizing Help on WhatsApp
@@ -555,28 +530,28 @@ function QuickViewModal({ product, isOpen, onClose, addToCart, onSizingOpen }) {
         <button className="quickview-close" onClick={onClose} aria-label="Close modal">
           <X size={20} />
         </button>
-        
+
         <div className="quickview-grid">
           <div className="quickview-image-sec">
             <img src={product.image || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&auto=format&fit=crop&q=80'} alt={product.title} className="quickview-img" />
           </div>
-          
+
           <div className="quickview-info-sec">
             <span className="quickview-category">{product.category}</span>
             <h2 className="quickview-title">{product.title}</h2>
             <div className="quickview-price-row">
               <span className="quickview-price">{formatPrice(product.price)}</span>
             </div>
-            
+
             <p className="quickview-desc">{product.description || 'No description available for this handcrafted jewelry piece.'}</p>
-            
+
             {/* Spec Tabs */}
             <div className="quickview-tabs">
               <button onClick={() => setActiveTab('specs')} className={`tab-btn ${activeTab === 'specs' ? 'active' : ''}`}>Specifications</button>
               <button onClick={() => setActiveTab('shipping')} className={`tab-btn ${activeTab === 'shipping' ? 'active' : ''}`}>Shipping</button>
               <button onClick={() => setActiveTab('care')} className={`tab-btn ${activeTab === 'care' ? 'active' : ''}`}>Jewelry Care</button>
             </div>
-            
+
             <div className="quickview-tab-content">
               {activeTab === 'specs' && (
                 <ul className="specs-table">
@@ -598,7 +573,7 @@ function QuickViewModal({ product, isOpen, onClose, addToCart, onSizingOpen }) {
                   </li>
                 </ul>
               )}
-              
+
               {activeTab === 'shipping' && (
                 <div className="tab-details">
                   <p>🚚 <strong>Lagos Delivery:</strong> Secure delivery in 24 to 48 hours.</p>
@@ -606,7 +581,7 @@ function QuickViewModal({ product, isOpen, onClose, addToCart, onSizingOpen }) {
                   <p>🔁 <strong>Return Policy:</strong> Returns accepted within 7 days for exchange only (standard items only, custom orders are final sale).</p>
                 </div>
               )}
-              
+
               {activeTab === 'care' && (
                 <div className="tab-details">
                   <p>Keep your Crown Collection pieces shining for generations:</p>
@@ -635,12 +610,12 @@ function QuickViewModal({ product, isOpen, onClose, addToCart, onSizingOpen }) {
                   <Plus size={16} />
                 </button>
               </div>
-              
+
               <button onClick={handleAddToCart} className="add-to-cart-large">
                 Add to Cart
               </button>
             </div>
-            
+
             <button onClick={handleDirectWhatsApp} className="buy-now-whatsapp">
               Buy Now via WhatsApp (Skip Cart)
             </button>
@@ -685,13 +660,13 @@ function SignatureCollections({ onSelectCategory }) {
         <h2 className="section-title">The Signature Series</h2>
         <p className="section-subtitle">Explore our hand-matched premium collections, curated for exquisite tastes and special milestones.</p>
       </Reveal>
-      
+
       <div className="sig-grid">
         {collections.map((col, index) => (
-          <Reveal 
-            key={col.id} 
-            as="div" 
-            className="sig-card" 
+          <Reveal
+            key={col.id}
+            as="div"
+            className="sig-card"
             delay={index * 150}
             onClick={() => onSelectCategory(col.category)}
           >
@@ -715,7 +690,7 @@ function SignatureCollections({ onSelectCategory }) {
 // ==========================================
 function StyleGallery() {
   const [activeImage, setActiveImage] = useState(null);
-  
+
   const galleryItems = [
     {
       id: 1,
@@ -747,10 +722,10 @@ function StyleGallery() {
       </Reveal>
       <div className="gallery-grid">
         {galleryItems.map((item, index) => (
-          <Reveal 
-            key={item.id} 
-            as="div" 
-            className="gallery-item-wrapper" 
+          <Reveal
+            key={item.id}
+            as="div"
+            className="gallery-item-wrapper"
             delay={index * 120}
             onClick={() => setActiveImage(item)}
           >
@@ -762,7 +737,7 @@ function StyleGallery() {
           </Reveal>
         ))}
       </div>
-      
+
       {activeImage && (
         <div className="lightbox-overlay" onClick={() => setActiveImage(null)}>
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
@@ -804,7 +779,7 @@ function RoyaltyVIPClub({ onSubscribeSuccess }) {
       setSubscribing(false);
       setEmail('');
       onSubscribeSuccess('Welcome to Royalty! We have sent a private invitation to your inbox.');
-      
+
       import('canvas-confetti').then((confetti) => {
         confetti.default({
           particleCount: 80,
@@ -827,12 +802,12 @@ function RoyaltyVIPClub({ onSubscribeSuccess }) {
           <p className="vip-newsletter-desc">
             Subscribe to receive private invitations to seasonal sales, custom-sizing guides, and exclusive releases of solid gold jewelry in Nigeria.
           </p>
-          
+
           <form onSubmit={handleSubscribe} className="vip-form">
             <div className="vip-input-group">
-              <input 
-                type="email" 
-                placeholder="Enter your email address" 
+              <input
+                type="email"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -903,34 +878,34 @@ function BookingSection() {
           <div className="booking-image-bg-accent"></div>
           <img src="https://images.unsplash.com/photo-1599643478524-fb66f70a00ac?w=800&auto=format&fit=crop&q=80" alt="Secure Your Slot" className="booking-image" />
         </Reveal>
-        
+
         <Reveal effect="fade-in-up" delay={200} className="booking-form-wrapper">
           <h2 className="booking-title">Secure Your Slot</h2>
           <p className="booking-subtitle">Ready for the Crown Experience? Fill out the form below.</p>
-          
+
           <form className="booking-form" onSubmit={handleSubmit}>
-            <input 
-              type="text" 
-              placeholder="Full Name" 
-              className="booking-input" 
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="booking-input"
               required
               value={formData.fullName}
-              onChange={e => setFormData({...formData, fullName: e.target.value})}
+              onChange={e => setFormData({ ...formData, fullName: e.target.value })}
             />
-            <input 
-              type="email" 
-              placeholder="Email Address" 
-              className="booking-input" 
+            <input
+              type="email"
+              placeholder="Email Address"
+              className="booking-input"
               required
               value={formData.email}
-              onChange={e => setFormData({...formData, email: e.target.value})}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
             />
             <div className="select-wrapper">
-              <select 
-                className="booking-input booking-select" 
+              <select
+                className="booking-input booking-select"
                 required
                 value={formData.service}
-                onChange={e => setFormData({...formData, service: e.target.value})}
+                onChange={e => setFormData({ ...formData, service: e.target.value })}
               >
                 <option value="" disabled>Select Service</option>
                 <option value="Custom Ring Design">Custom Ring Design</option>
@@ -940,22 +915,22 @@ function BookingSection() {
               </select>
               <ChevronDown className="select-icon" size={16} />
             </div>
-            <textarea 
-              placeholder="Additional Notes (Date/Time preference)" 
+            <textarea
+              placeholder="Additional Notes (Date/Time preference)"
               className="booking-textarea"
               rows={4}
               value={formData.notes}
-              onChange={e => setFormData({...formData, notes: e.target.value})}
+              onChange={e => setFormData({ ...formData, notes: e.target.value })}
             ></textarea>
-            
+
             <div className="booking-submit-row">
               <button type="submit" className="booking-submit-btn">
-                CONFIRM BOOKING 
+                CONFIRM BOOKING
                 <span className="submit-icon-wrapper">
                   <MessageSquare size={20} />
                 </span>
               </button>
-              
+
               <button type="button" className="booking-whatsapp-circle" onClick={handleSubmit}>
                 <Phone size={24} color="#fff" fill="#fff" />
               </button>
@@ -980,10 +955,10 @@ function VisitCrownStore() {
       <div className="dollhouse-grid">
         <Reveal effect="fade-in-up" className="dollhouse-map-wrapper">
           <div className="map-container">
-            <img 
-              src="/map-vintage.png" 
-              alt="CROWN Store Location Map" 
-              className="dollhouse-map-img" 
+            <img
+              src="/map-vintage.png"
+              alt="CROWN Store Location Map"
+              className="dollhouse-map-img"
             />
             {/* Hot Pink Location Pin with Tooltip */}
             <div className="map-pin-container">
@@ -995,17 +970,17 @@ function VisitCrownStore() {
             </div>
           </div>
         </Reveal>
-        
+
         <Reveal effect="fade-in-up" delay={200} className="dollhouse-info-wrapper">
           <h2 className="dollhouse-title">Visit The CROWN Store</h2>
           <p className="dollhouse-subtitle">Come experience royal elegance and fine craftsmanship in person at our flagship boutique.</p>
-          
+
           <div className="dollhouse-details">
             <div className="dollhouse-detail-item">
               <MapPin size={22} className="detail-icon" />
               <span>Tiana Hairline 1, Ikotun, Lagos, Nigeria</span>
             </div>
-            
+
             <div className="dollhouse-detail-item align-start">
               <Clock size={22} className="detail-icon" />
               <div>
@@ -1013,13 +988,13 @@ function VisitCrownStore() {
                 <p>Sun: 1:00 PM - 6:00 PM</p>
               </div>
             </div>
-            
+
             <div className="dollhouse-detail-item">
               <Phone size={22} className="detail-icon" />
               <span><a href="tel:+2347048916429" className="hover-link">+2347048916429</a></span>
             </div>
           </div>
-          
+
           <button onClick={handleGetDirections} className="directions-btn">
             GET DIRECTIONS
           </button>
@@ -1043,8 +1018,8 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
   // Filter & Sort Logic
   const filteredProducts = products
     .filter(p => category === 'All' || p.category === category)
-    .filter(p => p.title.toLowerCase().includes(search.toLowerCase()) || 
-                 (p.description && p.description.toLowerCase().includes(search.toLowerCase())))
+    .filter(p => p.title.toLowerCase().includes(search.toLowerCase()) ||
+      (p.description && p.description.toLowerCase().includes(search.toLowerCase())))
     .sort((a, b) => {
       if (sort === 'price-low') return a.price - b.price;
       if (sort === 'price-high') return b.price - a.price;
@@ -1080,7 +1055,7 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
               </a>
             </Reveal>
           </div>
-          
+
           <Reveal as="div" effect="fade-in" delay={300} className="hero-image-container">
             <div className="glass-badge" style={{ top: '15%', left: '-15%' }}>
               ✨ 2030 Collection
@@ -1088,11 +1063,11 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
             <div className="glass-badge" style={{ bottom: '20%', right: '-10%' }}>
               <ShieldCheck size={16} /> Authentic
             </div>
-            
+
             <div className="hero-arch">
-              <img 
-                src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80" 
-                alt="Luxury Crown Collection Jewels" 
+              <img
+                src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80"
+                alt="Luxury Crown Collection Jewels"
                 className="hero-img"
               />
             </div>
@@ -1150,15 +1125,15 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
         <div className="filters-bar">
           <div className="categories-container">
             {categories.map(cat => (
-              <button 
-                key={cat} 
+              <button
+                key={cat}
                 onClick={() => setCategory(cat)}
                 className={`category-btn ${category === cat ? 'active' : ''}`}
               >
                 {cat}
               </button>
             ))}
-            <button 
+            <button
               onClick={onSizingOpen}
               className="category-btn sizing-helper-btn"
               style={{ color: 'var(--gold-accent)', borderColor: 'rgba(194, 166, 136, 0.4)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
@@ -1170,10 +1145,10 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           <div className="search-sort-row">
             <div className="search-input-wrapper">
               <Search size={18} className="search-icon" />
-              <input 
+              <input
                 id="shop-search-input"
-                type="text" 
-                placeholder="Search premium pieces..." 
+                type="text"
+                placeholder="Search premium pieces..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="search-input"
@@ -1182,9 +1157,9 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
 
             <div className="sort-select-wrapper">
               <label htmlFor="sort" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)' }}>Sort By:</label>
-              <select 
-                id="sort" 
-                value={sort} 
+              <select
+                id="sort"
+                value={sort}
                 onChange={(e) => setSort(e.target.value)}
                 className="sort-select"
               >
@@ -1210,12 +1185,12 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
         ) : (
           <div className="products-grid">
             {filteredProducts.map((product, index) => (
-              <Reveal 
-                key={product.id} 
-                as="article" 
-                className="product-card" 
+              <Reveal
+                key={product.id}
+                as="article"
+                className="product-card"
                 delay={(index % 4) * 100}
-                onClick={() => onProductClick(product)} 
+                onClick={() => onProductClick(product)}
                 style={{ cursor: 'pointer' }}
               >
                 <div className="product-image-wrapper">
@@ -1232,12 +1207,12 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
                   <p className="product-desc">{product.description}</p>
                   <div className="product-footer">
                     <span className="product-price">{formatPrice(product.price)}</span>
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(product);
                       }}
-                      className="add-to-cart-btn" 
+                      className="add-to-cart-btn"
                       title="Add to cart"
                     >
                       <Plus size={20} />
@@ -1275,9 +1250,9 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           </Reveal>
           <Reveal as="div" effect="scale" className="craftsmanship-image-wrapper" delay={250}>
             <div className="craftsmanship-image-badge">✨ Handcrafted</div>
-            <img 
-              src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&auto=format&fit=crop&q=80" 
-              alt="Jeweler crafting premium rings" 
+            <img
+              src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&auto=format&fit=crop&q=80"
+              alt="Jeweler crafting premium rings"
               className="craftsmanship-img"
             />
           </Reveal>
@@ -1368,14 +1343,14 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
               a: "As a luxury jewelry boutique, we stand behind our quality. We offer exchanges within 7 days of delivery for standard items, provided they are in pristine, unworn condition. Custom bespoke orders are final sale but carry a lifetime warranty on materials."
             }
           ].map((item, index) => (
-            <Reveal 
-              key={index} 
-              as="div" 
+            <Reveal
+              key={index}
+              as="div"
               className={`faq-item ${activeFaq === index ? 'active' : ''}`}
               delay={index * 100}
             >
-              <button 
-                className="faq-question" 
+              <button
+                className="faq-question"
                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
               >
                 <span>{item.q}</span>
@@ -1402,7 +1377,7 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+
   // Product Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -1489,7 +1464,7 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ image: imagePreview })
         });
-        
+
         const uploadData = await uploadRes.json();
         if (!uploadRes.ok) {
           throw new Error(uploadData.error || 'Failed to upload image');
@@ -1523,7 +1498,7 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
       setCategory('Rings');
       setImageFile(null);
       setImagePreview('');
-      
+
       // Refresh the storefront product state
       onRefreshProducts();
     } catch (err) {
@@ -1595,15 +1570,15 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
           </div>
           <h2 className="admin-auth-title">Owner Access Portal</h2>
           <p className="admin-auth-desc">Please enter your administrative passkey to manage inventory and settings.</p>
-          
+
           {error && <div className="error-msg">{error}</div>}
 
           <form onSubmit={handleLogin}>
             <div className="form-group">
               <label className="form-label" htmlFor="passkey">Admin Passkey</label>
-              <input 
-                type="password" 
-                id="passkey" 
+              <input
+                type="password"
+                id="passkey"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -1647,42 +1622,42 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
         {/* Settings Form Card */}
         <div className="admin-card">
           <h2 className="admin-card-title">Website Configurations</h2>
-          
+
           {settingsSuccess && <div className="success-msg"><CheckCircle2 size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />{settingsSuccess}</div>}
           {settingsError && <div className="error-msg"><AlertCircle size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />{settingsError}</div>}
 
           <form onSubmit={handleSettingsSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="heroTitle">Hero Banner Title</label>
-              <input 
-                type="text" 
-                id="heroTitle" 
-                value={heroTitle} 
-                onChange={(e) => setHeroTitle(e.target.value)} 
-                className="form-input" 
-                required 
+              <input
+                type="text"
+                id="heroTitle"
+                value={heroTitle}
+                onChange={(e) => setHeroTitle(e.target.value)}
+                className="form-input"
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="heroSubtitle">Hero Subtitle (Eyebrow)</label>
-              <input 
-                type="text" 
-                id="heroSubtitle" 
-                value={heroSubtitle} 
-                onChange={(e) => setHeroSubtitle(e.target.value)} 
-                className="form-input" 
-                required 
+              <input
+                type="text"
+                id="heroSubtitle"
+                value={heroSubtitle}
+                onChange={(e) => setHeroSubtitle(e.target.value)}
+                className="form-input"
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="heroDescription">Hero Description</label>
-              <textarea 
-                id="heroDescription" 
-                value={heroDescription} 
-                onChange={(e) => setHeroDescription(e.target.value)} 
-                className="form-textarea" 
+              <textarea
+                id="heroDescription"
+                value={heroDescription}
+                onChange={(e) => setHeroDescription(e.target.value)}
+                className="form-textarea"
                 required
               />
             </div>
@@ -1704,44 +1679,44 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
         {/* Upload Form Card */}
         <div className="admin-card">
           <h2 className="admin-card-title">Upload New Jewelry</h2>
-          
+
           {formSuccess && <div className="success-msg"><CheckCircle2 size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />{formSuccess}</div>}
           {formError && <div className="error-msg"><AlertCircle size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />{formError}</div>}
 
           <form onSubmit={handleSubmitProduct}>
             <div className="form-group">
               <label className="form-label" htmlFor="title">Jewelry Name *</label>
-              <input 
-                type="text" 
-                id="title" 
-                value={title} 
-                onChange={(e) => setTitle(e.target.value)} 
-                className="form-input" 
+              <input
+                type="text"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="form-input"
                 placeholder="e.g., Diamond Solitaire Ring"
-                required 
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="price">Price (₦ - NGN) *</label>
-              <input 
-                type="number" 
-                id="price" 
-                value={price} 
-                onChange={(e) => setPrice(e.target.value)} 
-                className="form-input" 
+              <input
+                type="number"
+                id="price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="form-input"
                 placeholder="e.g., 250000"
                 min="0"
-                required 
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="category">Category *</label>
-              <select 
-                id="category" 
-                value={category} 
-                onChange={(e) => setCategory(e.target.value)} 
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 className="form-select"
               >
                 <option value="Rings">Rings</option>
@@ -1754,18 +1729,18 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
 
             <div className="form-group">
               <label className="form-label" htmlFor="description">Product Description</label>
-              <textarea 
-                id="description" 
-                value={description} 
-                onChange={(e) => setDescription(e.target.value)} 
-                className="form-textarea" 
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="form-textarea"
                 placeholder="Describe materials, carat quality, weight and size fittings..."
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Jewelry Display Photo *</label>
-              <div 
+              <div
                 className="file-upload-wrapper"
                 onClick={() => document.getElementById('image-upload').click()}
               >
@@ -1774,25 +1749,25 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
                   {imageFile ? imageFile.name : 'Select or Drop Product Image'}
                 </p>
                 <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>PNG, JPG, WEBP up to 8MB</p>
-                <input 
-                  type="file" 
-                  id="image-upload" 
-                  accept="image/*" 
-                  onChange={handleImageChange} 
-                  style={{ display: 'none' }} 
+                <input
+                  type="file"
+                  id="image-upload"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
                 />
               </div>
               {imagePreview && (
                 <div style={{ position: 'relative', marginTop: '12px' }}>
                   <img src={imagePreview} alt="Upload Preview" className="file-upload-preview" />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       setImageFile(null);
                       setImagePreview('');
                     }}
-                    className="icon-btn" 
+                    className="icon-btn"
                     style={{ position: 'absolute', top: '6px', right: '6px', width: '28px', height: '28px', backgroundColor: 'var(--surface-color)' }}
                   >
                     <X size={14} />
@@ -1817,7 +1792,7 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
         {/* Inventory list Card */}
         <div className="admin-card">
           <h2 className="admin-card-title">Boutique Inventory ({products.length})</h2>
-          
+
           {loadingProducts ? (
             <div style={{ textAlign: 'center', padding: '40px 0' }}>
               <Loader2 className="animate-spin text-primary" size={32} />
@@ -1858,7 +1833,7 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
                         </span>
                       </td>
                       <td style={{ textAlign: 'right' }}>
-                        <button 
+                        <button
                           onClick={() => handleDeleteProduct(p.id)}
                           className="delete-btn"
                           disabled={deleteLoadingId === p.id}
@@ -1887,7 +1862,7 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
                       <h3 className="admin-card-title-mobile">{p.title}</h3>
                       <div className="admin-card-price-mobile">{formatPrice(p.price)}</div>
                       <p className="admin-card-desc-mobile">{p.description || 'No description'}</p>
-                      <button 
+                      <button
                         onClick={() => handleDeleteProduct(p.id)}
                         className="delete-btn mobile-delete-btn"
                         disabled={deleteLoadingId === p.id}
@@ -1980,7 +1955,7 @@ function ChatBot() {
               <X size={18} />
             </button>
           </div>
-          
+
           <div className="chatbot-messages">
             {messages.map((msg, idx) => (
               <div key={idx} className={`chat-bubble-wrapper ${msg.sender}`}>
@@ -1993,8 +1968,8 @@ function ChatBot() {
 
           <div className="chatbot-quick-replies">
             {quickReplies.map((reply, idx) => (
-              <button 
-                key={idx} 
+              <button
+                key={idx}
                 className="quick-reply-btn"
                 onClick={() => handleSend(reply)}
               >
@@ -2004,8 +1979,8 @@ function ChatBot() {
           </div>
 
           <div className="chatbot-input-area">
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Ask a question..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -2020,16 +1995,16 @@ function ChatBot() {
       )}
 
       <div className="fab-column">
-        <a 
-          href="https://wa.me/2348029402971" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href="https://wa.me/2348029402971"
+          target="_blank"
+          rel="noopener noreferrer"
           className="fab-btn fab-whatsapp"
         >
           <Phone size={24} />
         </a>
-        <button 
-          className="fab-btn chatbot-fab" 
+        <button
+          className="fab-btn chatbot-fab"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
@@ -2128,7 +2103,7 @@ export default function App() {
     setCart(prevCart => {
       const existing = prevCart.find(item => item.id === product.id);
       if (existing) {
-        return prevCart.map(item => 
+        return prevCart.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
@@ -2143,7 +2118,7 @@ export default function App() {
       removeFromCart(id);
       return;
     }
-    setCart(prevCart => 
+    setCart(prevCart =>
       prevCart.map(item => item.id === id ? { ...item, quantity } : item)
     );
   };
@@ -2176,42 +2151,42 @@ export default function App() {
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
         <CustomCursor />
         <TrustBadge />
-        <Navbar 
-          cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)} 
+        <Navbar
+          cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
           onCartOpen={() => setIsCartOpen(true)}
         />
-        
+
         <main style={{ flexGrow: 1 }}>
           <Routes>
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
-                <StoreFront 
-                  products={products} 
+                <StoreFront
+                  products={products}
                   siteSettings={siteSettings}
-                  loading={loading} 
-                  addToCart={addToCart} 
+                  loading={loading}
+                  addToCart={addToCart}
                   onProductClick={handleProductClick}
                   onSizingOpen={() => setIsSizingOpen(true)}
                   onSubscribeSuccess={showToast}
                 />
-              } 
+              }
             />
-            <Route 
-              path="/admin" 
+            <Route
+              path="/admin"
               element={
-                <AdminConsole 
-                  products={products} 
-                  loadingProducts={loading} 
-                  onRefreshProducts={fetchProducts} 
+                <AdminConsole
+                  products={products}
+                  loadingProducts={loading}
+                  onRefreshProducts={fetchProducts}
                   siteSettings={siteSettings}
                 />
-              } 
+              }
             />
           </Routes>
         </main>
-        
-        <CartDrawer 
+
+        <CartDrawer
           isOpen={isCartOpen}
           onClose={() => setIsCartOpen(false)}
           cart={cart}
@@ -2219,26 +2194,26 @@ export default function App() {
           removeFromCart={removeFromCart}
         />
 
-        <QuickViewModal 
+        <QuickViewModal
           product={selectedProduct}
           isOpen={isQuickViewOpen}
           onClose={() => setIsQuickViewOpen(false)}
           addToCart={addToCart}
           onSizingOpen={() => setIsSizingOpen(true)}
         />
-        
-        <SizingModal 
+
+        <SizingModal
           isOpen={isSizingOpen}
           onClose={() => setIsSizingOpen(false)}
         />
 
-        <MobileBottomNav 
+        <MobileBottomNav
           onCartOpen={() => setIsCartOpen(true)}
           cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
           onSearchFocus={handleSearchFocus}
         />
 
-        <Toast 
+        <Toast
           message={toast.message}
           visible={toast.visible}
           onClose={() => setToast({ ...toast, visible: false })}

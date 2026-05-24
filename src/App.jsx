@@ -2273,7 +2273,7 @@ export default function App() {
             <div className="footer-brand">
               <h3>✨ CROWN COLLECTION</h3>
               <p>Exclusive jewelry and luxury accessories boutique based in Nigeria. Providing royal designs for elegant lifestyles.</p>
-              <p style={{ fontWeight: '500', color: 'var(--text-primary)' }}>📞 +234 8029402971</p>
+              <p style={{ fontWeight: '500', color: 'var(--text-primary)' }}>📞 +234 8029402971 | 09063079017</p>
             </div>
             <div>
               <h4 className="footer-links-title">Collections</h4>
@@ -2290,6 +2290,33 @@ export default function App() {
                 <li><a href="https://wa.me/2348029402971" target="_blank" rel="noopener noreferrer">Contact WhatsApp Support</a></li>
                 <li><a href="#shop">Shipping & Delivery</a></li>
                 <li><a href="#shop">Sizing Guide</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="footer-links-title">Connect With Us</h4>
+              <ul className="footer-links">
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Phone size={14} color="var(--primary-pink)" />
+                  <a href="tel:08029402971">08029402971</a>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Phone size={14} color="var(--primary-pink)" />
+                  <a href="tel:09063079017">09063079017</a>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary-pink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                  </svg>
+                  <a href="https://www.tiktok.com/@omojesu_67" target="_blank" rel="noopener noreferrer">TikTok: @omojesu_67</a>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Instagram size={14} color="var(--primary-pink)" />
+                  <a href="https://instagram.com/crown.wealth12" target="_blank" rel="noopener noreferrer">Instagram: @crown.wealth12</a>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Send size={14} color="var(--primary-pink)" />
+                  <a href="https://t.me/crown_collection12" target="_blank" rel="noopener noreferrer">Telegram: @crown_collection12</a>
+                </li>
               </ul>
             </div>
           </div>

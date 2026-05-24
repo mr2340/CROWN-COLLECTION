@@ -5,8 +5,10 @@ import {
   Upload, X, ChevronRight, Lock, ShieldCheck, ShoppingCart, 
   Sparkles, CheckCircle2, AlertCircle, ArrowLeft, Loader2,
   Award, Truck, Star, ChevronDown, ChevronUp,
-  Home, Mail, Eye, Ruler, Instagram, Phone
+  Home, Mail, Eye, Ruler, Instagram, Phone,
+  MessageSquare, Send, Bot, User
 } from 'lucide-react';
+
 
 // ==========================================
 // COMPONENT: SCROLL REVEAL WRAPPER
@@ -1763,6 +1765,124 @@ function AdminConsole({ products, loadingProducts, onRefreshProducts, siteSettin
 }
 
 // ==========================================
+// COMPONENT: RULE-BASED CHATBOT
+// ==========================================
+function ChatBot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { text: "Hello! Welcome to Crown Collection. How can I assist you today? 👑", sender: "bot" }
+  ]);
+  const [inputValue, setInputValue] = useState("");
+
+  const quickReplies = [
+    "Do you deliver?",
+    "Can I order a custom ring?",
+    "What is the price?",
+    "Speak to a Human"
+  ];
+
+  const handleSend = (text) => {
+    const userMessage = text || inputValue.trim();
+    if (!userMessage) return;
+
+    // Add user message
+    setMessages(prev => [...prev, { text: userMessage, sender: "user" }]);
+    setInputValue("");
+
+    // Bot response logic
+    setTimeout(() => {
+      const lowerText = userMessage.toLowerCase();
+      let botResponse = "";
+
+      if (lowerText.includes("deliver") || lowerText.includes("shipping") || lowerText.includes("where")) {
+        botResponse = "Yes! We offer fully insured nationwide delivery across all 36 states in Nigeria. Lagos deliveries take 24-48 hours, while other cities take 3-5 working days.";
+      } else if (lowerText.includes("custom") || lowerText.includes("bespoke") || lowerText.includes("size")) {
+        botResponse = "Absolutely! We specialize in custom designs and specific sizing. Please start a chat with us on WhatsApp to discuss your exact requirements.";
+      } else if (lowerText.includes("price") || lowerText.includes("cost") || lowerText.includes("how much")) {
+        botResponse = "Our pieces vary in price based on materials and complexity. Please check the product catalog or reach out to us on WhatsApp for quotes on specific custom pieces.";
+      } else if (lowerText.includes("human") || lowerText.includes("agent") || lowerText.includes("whatsapp")) {
+        botResponse = "I will connect you with a human representative on WhatsApp.";
+        setTimeout(() => {
+          window.open("https://wa.me/2348029402971", "_blank");
+        }, 1500);
+      } else {
+        botResponse = "I'm not quite sure how to answer that. For complex questions, you can always reach out to our team directly on WhatsApp!";
+      }
+
+      setMessages(prev => [...prev, { text: botResponse, sender: "bot" }]);
+    }, 600);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
+  };
+
+  return (
+    <div className="chatbot-container">
+      {isOpen && (
+        <div className="chatbot-window glass-panel">
+          <div className="chatbot-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Bot size={20} />
+              <h3 style={{ margin: 0, fontSize: '16px' }}>Crown Concierge</h3>
+            </div>
+            <button onClick={() => setIsOpen(false)} className="icon-btn chatbot-close">
+              <X size={18} />
+            </button>
+          </div>
+          
+          <div className="chatbot-messages">
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`chat-bubble-wrapper ${msg.sender}`}>
+                <div className={`chat-bubble ${msg.sender}`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="chatbot-quick-replies">
+            {quickReplies.map((reply, idx) => (
+              <button 
+                key={idx} 
+                className="quick-reply-btn"
+                onClick={() => handleSend(reply)}
+              >
+                {reply}
+              </button>
+            ))}
+          </div>
+
+          <div className="chatbot-input-area">
+            <input 
+              type="text" 
+              placeholder="Ask a question..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="chatbot-input"
+            />
+            <button onClick={() => handleSend()} className="chatbot-send-btn">
+              <Send size={16} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <button 
+        className="fab-btn chatbot-fab" 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ zIndex: 1000 }}
+      >
+        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
+      </button>
+    </div>
+  );
+}
+
+// ==========================================
 // MAIN COMPONENT & STATE MANAGEMENT
 // ==========================================
 export default function App() {
@@ -1966,6 +2086,8 @@ export default function App() {
           visible={toast.visible}
           onClose={() => setToast({ ...toast, visible: false })}
         />
+
+        <ChatBot />
 
         {/* Footer */}
         <footer className="footer">

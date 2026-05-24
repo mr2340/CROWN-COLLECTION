@@ -860,7 +860,6 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
 
   return (
     <div>
-      <CountdownTimer />
       {/* Hero Section */}
       <section id="hero" className="hero">
         <div className="container hero-grid">
@@ -906,6 +905,8 @@ function StoreFront({ products, siteSettings, loading, addToCart, onProductClick
           </Reveal>
         </div>
       </section>
+
+      <CountdownTimer />
 
       {/* Features Bar */}
       <section className="features-bar">

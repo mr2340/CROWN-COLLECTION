@@ -3819,3 +3819,126 @@ body.dark .sig-card-overlay {
     width: 100%;
   }
 }
+
+/* ==========================================
+   TERMS & CONDITIONS POP-UP BANNER
+   ========================================== */
+.terms-banner-overlay {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  animation: slide-up-fade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-up-fade {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.terms-banner-card {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 650px;
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 20, 147, 0.2);
+  border-radius: 20px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 20, 147, 0.1);
+}
+
+.terms-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.terms-icon-wrapper {
+  background: rgba(255, 20, 147, 0.1);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 20, 147, 0.2);
+}
+
+.terms-icon {
+  color: var(--primary-pink);
+}
+
+.terms-text-container h4 {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.terms-text-container p {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.terms-accept-btn {
+  background-color: var(--primary-pink);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.15);
+}
+
+.terms-accept-btn:hover {
+  background-color: var(--primary-pink-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 20, 147, 0.35);
+}
+
+/* Responsive adjustments for Terms banner */
+@media (max-width: 768px) {
+  .terms-banner-overlay {
+    bottom: 90px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .terms-banner-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .terms-accept-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
